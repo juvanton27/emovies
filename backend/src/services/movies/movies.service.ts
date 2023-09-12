@@ -1,9 +1,9 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Observable, concatMap, from, map, of, tap, toArray } from 'rxjs';
-import { Repository } from 'typeorm';
+import { MetadataAlreadyExistsError, Repository } from 'typeorm';
 import { MovieDbo } from '../../dbo/movie.dbo';
 import { MovieTMDBDbo } from '../../dbo/movie.tmdb.dbo';
 import { MovieMapper } from '../../mappers/movies.mapper';
@@ -67,12 +67,24 @@ export class MoviesService {
       this.logger.verbose(`Cover "${filepath}" already downloaded. Just retreiving it ...`);
       return of(filepath);
     }
-    const url = `${this.tmdbImageUrl}${movie.posterPath}`;    
+    const url = `${this.tmdbImageUrl}${movie.posterPath}`;   
     return this.axios.get(url, {responseType: 'arraybuffer'}).pipe(
       map(({data}) => {
         fs.writeFileSync(filepath, data);
+        this.logger.verbose(`Poster saved to "${filepath}"`);
         return filepath;
       }),
     );
+  }
+
+  create(movie: Movie): Observable<Movie> {
+    this.logger.verbose(`Creating movie "${movie.title}"`);
+    return from(this.moviesRepo.findOneBy({id: movie.id})).pipe(
+      concatMap((dbo: MovieDbo) => {
+        if (dbo) throw new BadRequestException(`Movie "${dbo.title}" already exists !`);
+        return from(this.moviesRepo.save(MovieMapper.toDbo(movie)));
+      }),
+      map((dbo: MovieDbo) => MovieMapper.fromDbo(dbo)),
+    )
   }
 }

@@ -36,3 +36,4 @@ lerna-debug.log*
 
 DEV.env
 data/
+results/

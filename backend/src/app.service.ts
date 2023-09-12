@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Observable, concatMap } from 'rxjs';
+import { Observable, concatMap, map } from 'rxjs';
 import { Movie } from './model/movie.model';
 import { AiService } from './services/ai/ai.service';
 import { MoviesService } from './services/movies/movies.service';
@@ -18,7 +18,13 @@ export class AppService {
         return this.aiService.textToSpeech(summary, `${movie.id}.wav`).pipe(
           concatMap((fullpath: string) => this.aiService.speechToVideo(fullpath)),
           concatMap(() => this.moviesService.downloadPoster(movie)),
-          concatMap(() => this.aiService.mountVideo(movie))
+          concatMap(() => this.aiService.mountVideo(movie).pipe(
+            concatMap((fullpath: string) => {
+              return this.moviesService.create(movie).pipe(
+                map(() => fullpath),
+              )
+            }),
+          )),
         );
       }),
     );
