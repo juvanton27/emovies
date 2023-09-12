@@ -27,9 +27,15 @@ I didn't find other way to clone repo directly in `backend/data/utils/SadTalker`
 Don't forget to read SadTalker repo to be aware of its requirements
 #### Auto subtitles
 I choose auto subtitles (https://github.com/m1guelpf/auto-subtitle). Doing it myself was to tricky
-I installed the pyhton package with `pip3 install git+https://github.com/m1guelpf/auto-subtitle.git`
+I installed the python package with `pip3 install git+https://github.com/m1guelpf/auto-subtitle.git`
 Then it is usable with command `auto_subtitle /path/to/video.mp4 -o subtitled/`
-I had to patch openAI/whisper package (https://github.com/openai/whisper) by replacing this part in `whisper/whisperdecoding.py`. I added -4.5 instead of max_text_token_logprob. This allows to have shorter subtitles
+I had to patch it by replacing `auto_subtilte/auto_subtitle/cli.py` to redesign subtitle to be on center of the screen
+
+`ffmpeg.concat(
+    video.filter('subtitles', srt_path, force_style="Fontsize=14,OutlineColour=&H40000000,MarginV=128"), audio, v=1, a=1
+  ).output(out_path).run(quiet=True, overwrite_output=True)`
+
+I also had to patch openAI/whisper package (https://github.com/openai/whisper) by replacing this part in `whisper/whisperdecoding.py`. I added `-4.5` instead of `max_text_token_logprob`. This allows to have shorter subtitles
 
 `logprobs = F.log_softmax(logits.float(), dim=-1)
 for k in range(tokens.shape[0]):

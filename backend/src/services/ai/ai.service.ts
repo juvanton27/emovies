@@ -23,8 +23,9 @@ export class AiService {
       { role: 'user', content: `For a movie whose summary is "${summary}", which emotion results most between ${emotions} ? Answer in one word, the emotion` }
     ])).pipe(
       map((response: any) => {
-        if (!response || response?.choices.length === 0) throw new Error('Error while asking for a rephrase');
+        if (!response || response?.choices.length === 0) throw new Error('Error while asking for the emotion');
         const generatedSentence: string = response.choices[0].message.content;
+        this.logger.verbose(`AI responded : "${generatedSentence}"`);
         let emotion: Emotion;
         for (const word of generatedSentence.split(' ')) {
           if (allEmotions.includes(word as Emotion)) {
