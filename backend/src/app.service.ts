@@ -12,13 +12,15 @@ export class AppService {
   ) { }
 
   generateVideo(): Observable<any> {
-    // return this.moviesService.findTrendingMovie().pipe(
-    //     concatMap((movie: Movie) => {
-    //       const summary = this.aiService.prepareTextFromTemplate(movie);
-    //       return this.aiService.textToSpeech(summary, `${movie.id}.wav`);
-    //     }),
-    //     concatMap((fullpath: string) => this.aiService.speechToVideo(fullpath)),
-    // );
-    return this.moviesService.downloadPoster({id: 615656, posterPath: '/4m1Au3YkjqsxF8iwQy0fPYSxE0h.jpg'} as Movie);
+    return this.moviesService.findTrendingMovie().pipe(
+      concatMap((movie: Movie) => {
+        const summary = this.aiService.prepareTextFromTemplate(movie);
+        return this.aiService.textToSpeech(summary, `${movie.id}.wav`).pipe(
+          concatMap((fullpath: string) => this.aiService.speechToVideo(fullpath)),
+          concatMap(() => this.moviesService.downloadPoster(movie)),
+          concatMap(() => this.aiService.mountVideo(movie))
+        );
+      }),
+    );
   }
 }

@@ -29,3 +29,15 @@ Don't forget to read SadTalker repo to be aware of its requirements
 I choose auto subtitles (https://github.com/m1guelpf/auto-subtitle). Doing it myself was to tricky
 I installed the pyhton package with `pip3 install git+https://github.com/m1guelpf/auto-subtitle.git`
 Then it is usable with command `auto_subtitle /path/to/video.mp4 -o subtitled/`
+I had to patch openAI/whisper package (https://github.com/openai/whisper) by replacing this part in `whisper/whisperdecoding.py`. I added -4.5 instead of max_text_token_logprob. This allows to have shorter subtitles
+
+`logprobs = F.log_softmax(logits.float(), dim=-1)
+for k in range(tokens.shape[0]):
+  timestamp_logprob = logprobs[k, self.tokenizer.timestamp_begin :].logsumexp(
+    dim=-1
+  )
+  max_text_token_logprob = logprobs[k, : self.tokenizer.timestamp_begin].max()
+  if timestamp_logprob > -4.5:
+    logits[k, : self.tokenizer.timestamp_begin] = -np.inf`
+
+Once it is patched, you can install it globally with `pip3 install .` on root folder

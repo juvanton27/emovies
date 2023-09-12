@@ -1,8 +1,8 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Observable, concatMap, from, map, toArray } from 'rxjs';
+import { Observable, concatMap, from, map, of, tap, toArray } from 'rxjs';
 import { Repository } from 'typeorm';
 import { MovieDbo } from '../../dbo/movie.dbo';
 import { MovieTMDBDbo } from '../../dbo/movie.tmdb.dbo';
@@ -15,6 +15,8 @@ import * as path from 'path';
 
 @Injectable()
 export class MoviesService {
+  private readonly logger = new Logger(MoviesService.name)
+
   private readonly tmdbUrl: string = 'https://api.themoviedb.org/3/movie';
   private readonly tmdbImageUrl: string = 'https://image.tmdb.org/t/p/original';
   private readonly headers: any;
@@ -48,6 +50,7 @@ export class MoviesService {
       concatMap((movies: MovieTMDBDbo[]) => {
         movies = movies.filter(m => !!m);
         if (!movies || movies?.length === 0) throw new Error('No movies found');
+        this.logger.verbose(`Working with movie "${movies[0].title}" !`);
         return this.aiService.findEmotionFromSummary(movies[0].overview).pipe(
           concatMap((emotion: Emotion) => this.aiService.rephraseSummary(movies[0].overview).pipe(
             map((summary: string) => MovieMapper.fromTMDBDbo(movies[0], emotion, summary)),
@@ -57,10 +60,13 @@ export class MoviesService {
     );
   }
 
-  downloadPoster(movie: Movie): Observable<any> {
+  downloadPoster(movie: Movie): Observable<string> {
     const posterExt = path.extname(movie.posterPath);
     const filepath = `data/image/${movie.id}${posterExt}`;
-    const file = fs.createWriteStream(filepath);
+    if (fs.existsSync(filepath)) {
+      this.logger.verbose(`Cover "${filepath}" already downloaded. Just retreiving it ...`);
+      return of(filepath);
+    }
     const url = `${this.tmdbImageUrl}${movie.posterPath}`;    
     return this.axios.get(url, {responseType: 'arraybuffer'}).pipe(
       map(({data}) => {
