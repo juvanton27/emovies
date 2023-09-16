@@ -13,7 +13,7 @@ export class AiService {
   private model: InferenceModel;
 
   constructor() {
-    from(loadModel('ggml-vicuna-7b-1.1-q4_2')).subscribe((m: InferenceModel) => this.model = m);
+    from(loadModel('ggml-vicuna-7b-1.1-q4_2', { verbose: false })).subscribe((m: InferenceModel) => this.model = m);
   }
 
   findEmotionFromSummary(summary: string): Observable<Emotion> {

@@ -10,6 +10,7 @@ import { MovieDbo } from './dbo/movie.dbo';
 import { AiService } from './services/ai/ai.service';
 import { MoviesService } from './services/movies/movies.service';
 import { ProcessingService } from './services/processing/processing.service';
+import { ScheduleModule } from '@nestjs/schedule';
 
 const detectEnvFile = (): string => {
   if (!process.env.ENV) {
@@ -47,6 +48,7 @@ const detectEnvFile = (): string => {
       })
     }),
     TypeOrmModule.forFeature([MovieDbo]),
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [

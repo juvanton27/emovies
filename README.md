@@ -27,7 +27,6 @@ I didn't find other way to clone repo directly in `backend/data/utils/SadTalker`
 Don't forget to read SadTalker repo to be aware of its requirements
 #### Auto subtitles
 I choose auto subtitles (https://github.com/m1guelpf/auto-subtitle). Doing it myself was to tricky
-I installed the python package with `pip3 install git+https://github.com/m1guelpf/auto-subtitle.git`
 Then it is usable with command `auto_subtitle /path/to/video.mp4 -o subtitled/`
 I had to patch it by replacing `auto_subtilte/auto_subtitle/cli.py` to redesign subtitle to be on center of the screen
 

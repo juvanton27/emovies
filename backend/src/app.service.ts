@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Observable, concatMap, map } from 'rxjs';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { Observable, concatMap } from 'rxjs';
 import { Movie } from './model/movie.model';
 import { AiService } from './services/ai/ai.service';
 import { MoviesService } from './services/movies/movies.service';
@@ -13,6 +14,7 @@ export class AppService {
     private readonly processingService: ProcessingService,
   ) { }
 
+  @Cron(CronExpression.EVERY_DAY_AT_NOON)
   generateVideo(): Observable<any> {
     return this.moviesService.findTrendingMovie().pipe(
       concatMap((movie: Movie) => {
