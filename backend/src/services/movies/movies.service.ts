@@ -87,4 +87,8 @@ export class MoviesService {
       map((dbo: MovieDbo) => MovieMapper.fromDbo(dbo)),
     )
   }
+
+  countByEmotion(emotion: Emotion): Observable<number> {
+    return from(this.moviesRepo.countBy({emotion}));
+  }
 }
