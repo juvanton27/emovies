@@ -20,7 +20,7 @@ export class AiService {
     this.logger.verbose('Finding emotion ...');
     const emotions: string = allEmotions.join(', ');
     return from(createCompletion(this.model, [
-      { role: 'user', content: `For a movie whose summary is "${summary}", which emotion results most between ${emotions} ? Answer in one word, the emotion` }
+      { role: 'user', content: `For a movie whose summary is "${summary}", which emotion results most between ${emotions} ? Answer in only one word, the emotion` }
     ])).pipe(
       map((response: any) => {
         if (!response || response?.choices.length === 0) throw new Error('Error while asking for the emotion');
@@ -28,7 +28,7 @@ export class AiService {
         this.logger.verbose(`AI responded : "${generatedSentence}"`);
         let emotion: Emotion;
         for (const word of generatedSentence.split(' ')) {
-          if (allEmotions.includes(word as Emotion)) {
+          if (allEmotions.includes(word.toLowerCase() as Emotion)) {
             emotion = word as Emotion;
             break;
           }
@@ -43,7 +43,7 @@ export class AiService {
   rephraseSummary(summary: string): Observable<string> {
     this.logger.verbose('Rephrasing summary ...');
     return from(createCompletion(this.model, [
-      { role: 'user', content: `Rephrase this summary for me as if you had to convince a friend who\'s name is "Movios" to watch it: "${summary}"` }
+      { role: 'user', content: `Rephrase this summary for me as if you had to convince a friend to watch it when addressing an audience by beginning with "Hey guys": "${summary}"` }
     ])).pipe(
       map((response: any) => {
         if (!response || response?.choices.length === 0) throw new Error('Error while asking for a rephrase');
@@ -217,7 +217,7 @@ export class AiService {
             if (error) throw new Error(`Error while creating cover with radius "${tempDir}/cover_radius.png" : ${error}`);
             this.logger.verbose(`Cover with radius created "${tempDir}/cover_radius.png"`);
 
-            return bindCallback(exec)(`convert ${tempDir}/cover_radius.png -resize x600 ${tempDir}/cover_radius_resized.png`, {});
+            return bindCallback(exec)(`convert ${tempDir}/cover_radius.png -resize x800 ${tempDir}/cover_radius_resized.png`, {});
           }),
           concatMap(([error, stdout, stderr]) => {
             if (error) throw new Error(`Error while resizing cover radius "${tempDir}/cover_radius.png"`);
@@ -233,8 +233,8 @@ export class AiService {
 
         return bindCallback(exec)(`ffmpeg -i ${tempDir}/background_and_cover.mp4 -i ${stvVideoPath} -filter_complex "\
         [1]format=yuva444p,geq=lum='p(X,Y)':a='st(1,pow(min(W/2,H/2),2))+st(3,pow(X-(W/2),2)+pow(Y-(H/2),2));if(lte(ld(3),ld(1)),255,0)'[circular shaped video];\
-        [circular shaped video]scale=w=-1:h=500[circular shaped video small];\
-        [0][circular shaped video small]overlay=(W-w)/2:1100" -filter_complex_threads 1\
+        [circular shaped video]scale=w=-1:h=300[circular shaped video small];\
+        [0][circular shaped video small]overlay=(W-w)/2:1300" -filter_complex_threads 1\
         -map 0:a? -metadata:s:a:0 title="Sound main movie" -disposition:a:0 default -map 1:a -metadata:s:a:1 title="Sound overlayed movie"\
         -disposition:a:1 none -c:v libx264 -preset ultrafast -shortest ${tempDir}/${id}.mp4`, {});
       }),
