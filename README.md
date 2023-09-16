@@ -3,7 +3,8 @@ This application allows you to generate TikTok/Shorts videos whose main subject 
 This application can/has :
   - Generate shorts
   - Generate and publish videos
-  - A web interface
+  - A web interface for public
+  - A web interface for admin
 
 ## Installation
 To run all the project you will need :
@@ -12,6 +13,7 @@ To run all the project you will need :
   - A TTS (Text To Speech)
   - A Speech to video
   - An auto subtitle
+  - A YouTube uploader
 Only available on Linux (Ubuntu) for the moment ...
 ### Ubuntu
 #### GPT cli
@@ -46,3 +48,16 @@ for k in range(tokens.shape[0]):
     logits[k, : self.tokenizer.timestamp_begin] = -np.inf`
 
 Once it is patched, you can install it globally with `pip3 install .` on root folder
+#### YouTube uploader
+I implemented mine in `youtube-bot.tgz`.
+Unzip in utils folder with `tar xzvf youtube-bot.tgz data/utils`.
+Then it is usable with command `python3 data/utils/main.py --title "<Title>" --description "<Description>" --path "<path/to/file.mp4>"`.
+Don't forget to login before with command `python3 data/utils/login.py`.
+
+## Generate Shorts
+
+## Generate/Upload videos
+
+## Web interface for public
+
+## Web interface admin

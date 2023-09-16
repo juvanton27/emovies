@@ -7,7 +7,7 @@ import { Logger } from '@nestjs/common';
 const logger = new Logger('Main');
 
 // Mandatory packages
-const pip: string[] = ['auto_subtitle', 'openai-whisper']; // TO DO: à peaufiner
+const pip: string[] = ['auto_subtitle', 'openai-whisper', 'mycroft-mimic3-tts']; // TO DO: à peaufiner
 const apt: string[] = ['ffmpeg', 'imagemagick',]; // TO DO: à peaufiner
 
 async function bootstrap() {
