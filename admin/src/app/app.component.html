@@ -1,6 +1,7 @@
 <div class="h-screen">
-  <mat-toolbar>
+  <mat-toolbar class="flex justify-between">
     <span>Emovies</span>
+    <button (click)="generateVideo()">Generate</button>
   </mat-toolbar>
   <mat-drawer-container class="h-[calc(100%-64px)]">
     <mat-drawer mode="side" opened class="p-[16px] w-[300px]">
@@ -12,7 +13,7 @@
             <h1>{{ route.title }}</h1>
           </a>
         </div>
-        <div class="bg-slate-50 rounded-lg">
+        <div *ngIf="currentState && currentState.trim() !== ''" class="bg-slate-50 rounded-lg">
           <mat-progress-bar mode="indeterminate" class="top-0 rounded-t-lg"></mat-progress-bar>
           <div class="p-4">
             <p>{{ currentState }}</p>

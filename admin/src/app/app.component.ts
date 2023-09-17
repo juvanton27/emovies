@@ -1,4 +1,5 @@
 import { Component, NgZone, OnInit } from '@angular/core';
+import { MoviesService } from './services/movies.service';
 
 @Component({
   selector: 'app-root',
@@ -12,14 +13,21 @@ export class AppComponent implements OnInit {
   ];
   currentState!: string;
 
-  constructor(private ngZone: NgZone) { }
+  constructor(
+    private ngZone: NgZone,
+    private readonly moviesService: MoviesService
+  ) { }
 
   ngOnInit(): void {
-    const eventSource = new EventSource('/api-processing');
+    const eventSource = new EventSource('/api-processing/sse');
     eventSource.onmessage = ({ data }) => {
       this.ngZone.run(() => {
         this.currentState = JSON.parse(data).message;
       })
     }
+  }
+
+  generateVideo(): void {
+    this.moviesService.generateVideo().subscribe();
   }
 }

@@ -14,7 +14,7 @@
     "logLevel": "debug",
     "changeOrigin": true,
     "pathRewrite": {
-      "^/api-processing": "/sse"
+      "^/api-processing": "/"
     }
   }
 }

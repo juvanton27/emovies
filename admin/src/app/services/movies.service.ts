@@ -30,15 +30,11 @@ export class MoviesService {
 
   getResult(id: number): Observable<string> {
     const url = `${this.endpoint}/movies/result/${id}`;
-    return this.http.get(url, { responseType: 'text' }).pipe(
-      map((data: string) => {
-        console.log(data);
-        return data
-        const blob = new Blob([data], { type: "video/mp4" });
-        console.log(blob);
-        
-        return URL.createObjectURL(blob);
-      })
-    );
+    return this.http.get(url, { responseType: 'text' });
+  }
+
+  generateVideo(): Observable<void> {
+    const url = '/api-processing';
+    return this.http.get<void>(url);
   }
 }

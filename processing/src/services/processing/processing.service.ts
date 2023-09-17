@@ -64,7 +64,7 @@ export class ProcessingService {
       }),
       concatMap((duration: number) => {
         this.logger.verbose(`Creating background video of ${duration} seconds`);
-        return bindCallback(exec)(`ffmpeg -loop 1 -i ${tempDir}/blurred.jpg -c:v libx264 -t ${duration} -pix_fmt yuv420p  ${tempDir}/background.mp4`, {}).pipe(
+        return bindCallback(exec)(`ffmpeg -y -loop 1 -i ${tempDir}/blurred.jpg -c:v libx264 -t ${duration} -pix_fmt yuv420p  ${tempDir}/background.mp4`, {}).pipe(
           concatMap(([error, stdout, stderr]) => {
             if (error) throw new Error(`Error while creating "${tempDir}/background.mp4" : ${error}`);
             this.logger.verbose(`Background created in "${tempDir}/background.mp4"`);
@@ -100,7 +100,7 @@ export class ProcessingService {
             if (error) throw new Error(`Error while resizing cover radius "${tempDir}/cover_radius.png"`);
             this.logger.verbose(`Cover radius resized "${tempDir}/cover_radius_resized.png"`);
 
-            return bindCallback(exec)(`ffmpeg -i ${tempDir}/background.mp4 -i ${tempDir}/cover_radius_resized.png -filter_complex "[0:v][1:v] overlay=(W-w)/2:250:enable='between(t,2,${duration})'" -pix_fmt yuv420p -c:a copy ${tempDir}/background_and_cover.mp4`, {});
+            return bindCallback(exec)(`ffmpeg -y -i ${tempDir}/background.mp4 -i ${tempDir}/cover_radius_resized.png -filter_complex "[0:v][1:v] overlay=(W-w)/2:250:enable='between(t,2,${duration})'" -pix_fmt yuv420p -c:a copy ${tempDir}/background_and_cover.mp4`, {});
           }),
         );
       }),
@@ -108,7 +108,7 @@ export class ProcessingService {
         if (error) throw new Error(`Error while adding "${tempDir}/cover_radius_resized.png" on "${tempDir}/background.mp4" : ${error}`);
         this.logger.verbose(`Cover "${tempDir}/cover_radius_resized.png" added to "${tempDir}/background.mp4" at "${tempDir}/background_and_cover.mp4"`);
 
-        return bindCallback(exec)(`ffmpeg -i ${tempDir}/background_and_cover.mp4 -i ${stvVideoPath} -filter_complex "\
+        return bindCallback(exec)(`ffmpeg -y -i ${tempDir}/background_and_cover.mp4 -i ${stvVideoPath} -filter_complex "\
         [1]format=yuva444p,geq=lum='p(X,Y)':a='st(1,pow(min(W/2,H/2),2))+st(3,pow(X-(W/2),2)+pow(Y-(H/2),2));if(lte(ld(3),ld(1)),255,0)'[circular shaped video];\
         [circular shaped video]scale=w=-1:h=300[circular shaped video small];\
         [0][circular shaped video small]overlay=(W-w)/2:1300" -filter_complex_threads 1\
