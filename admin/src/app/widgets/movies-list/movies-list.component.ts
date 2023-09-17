@@ -1,7 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MoviesService } from '../../services/movies.service';
+import { MatDialog } from '@angular/material/dialog';
 import { Movie } from '../../model/movie.model';
 import { SearchResult } from '../../model/search-result.model';
+import { MoviesService } from '../../services/movies.service';
+import { MovieInfoComponent } from '../movie-info/movie-info.component';
 
 @Component({
   selector: 'app-movies-list',
@@ -13,7 +15,8 @@ export class MoviesListComponent implements OnInit {
   
   constructor(
     @Inject('API_TMDB_IMAGE') private readonly tmdbImage: string,
-    private readonly moviesService: MoviesService
+    private readonly moviesService: MoviesService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -25,5 +28,11 @@ export class MoviesListComponent implements OnInit {
 
   fullPosterPath(path: string): string {
     return this.tmdbImage+path;
+  }
+
+  openMovieInfo(id: number): void {
+    this.dialog.open(MovieInfoComponent, {
+      data: id,
+    });
   }
 }

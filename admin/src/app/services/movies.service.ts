@@ -22,4 +22,9 @@ export class MoviesService {
     if (filter?.uploaded) params.append('uploaded', filter.uploaded);
     return this.http.get<SearchResult<Movie>>(url, {params});
   }
+
+  getById(id: number): Observable<Movie> {
+    const url = `${this.endpoint}/movies/${id}`;
+    return this.http.get<Movie>(url);
+  }
 }

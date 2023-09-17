@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { exec } from 'child_process';
 import * as fs from 'fs';
 import { Observable, bindCallback, concatMap, map, of } from 'rxjs';
@@ -6,21 +6,29 @@ import { Movie } from '../../model/movie.model';
 import * as path from 'path';
 import { Emotion } from '../../model/emotion.type';
 import { MoviesService } from '../movies/movies.service';
+import { LoggerService } from '../logger/logger.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ProcessingService {
-  private readonly logger = new Logger(ProcessingService.name);
+  private readonly dataDir: string;
+  private readonly resultsDir: string;
 
   constructor(
-    private readonly moviesService: MoviesService
-  ) { }
+    private readonly moviesService: MoviesService,
+    @Inject(LoggerService) private logger: LoggerService,
+    private readonly configService: ConfigService,
+  ) {
+    this.dataDir = configService.get<string>('directory.data');
+    this.resultsDir = configService.get<string>('directory.results');
+  }
 
   mountVideo(movie: Movie): Observable<string> {
     const id: number = movie.id;
-    const imageDir: string = 'data/image';
-    const tempDir: string = `data/temp/${id}`;
+    const imageDir: string = `${this.dataDir}/image`;
+    const tempDir: string = `${this.dataDir}/temp/${id}`;
     if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
-    const resultDir: string = `results/`;
+    const resultDir: string = `${this.resultsDir}/`;
     const resultPath: string = `${resultDir}${id}.mp4`;
     if (fs.existsSync(resultPath)) {
       this.logger.verbose(`Video for movie "${movie.title}" already mounted at "${resultPath}". Just retreiving it ...`);
@@ -30,7 +38,7 @@ export class ProcessingService {
 
     const imagePath: string = `${imageDir}/${id}.jpg`;
     if (!fs.existsSync(imagePath)) throw new Error(`${imagePath} does not exists !`);
-    const stvVideoPath: string = `data/video/stv_${id}.mp4`;
+    const stvVideoPath: string = `${this.dataDir}/video/stv_${id}.mp4`;
     if (!fs.existsSync(stvVideoPath)) throw new Error(`${stvVideoPath} does not exists !`);
 
     this.logger.verbose(`Begin video mounting from "${imagePath}" and "${stvVideoPath}" ...`);
@@ -137,14 +145,14 @@ export class ProcessingService {
    */
   uploadOnYouTube(title: string, description: string, videoPath: string): Observable<boolean> {
     this.logger.verbose(`Uploading "${videoPath}" ...`);
-    const pythonScriptPath: string = 'data/utils/youtube-bot/main.py';
+    const pythonScriptPath: string = `${this.dataDir}/utils/youtube-bot/main.py`;
     const absPath = path.resolve(videoPath);
     const command: string = `python3 ${pythonScriptPath} --title "${title}" --description "${description}" --path "${absPath}"`;
     return bindCallback(exec)(command, {}).pipe(
       map(([error, stdout, stderr]) => {
         if (error) throw new Error(`Error while uploading video to YouTube : ${error}`);
         if (stdout) {
-          this.logger.verbose(stdout);
+          this.logger.verbose(stdout.toString());
           return true;
         } else return false;
       }),

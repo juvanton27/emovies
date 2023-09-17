@@ -9,9 +9,10 @@ import { AppService } from './app.service';
 import { MovieDbo } from './dbo/movie.dbo';
 import { MoviesService } from './services/movies/movies.service';
 import { ScheduleModule } from '@nestjs/schedule';
-import { MoviesController } from './controllers/movies/movies.controller';
 import { LoggerService } from './services/logger/logger.service';
-import { LoggerController } from './controllers/logger/logger.controller';
+import { AiService } from './services/ai/ai.service';
+import { ProcessingService } from './services/processing/processing.service';
+
 
 const detectEnvFile = (): string => {
   if (!process.env.ENV) {
@@ -51,13 +52,7 @@ const detectEnvFile = (): string => {
     TypeOrmModule.forFeature([MovieDbo]),
     ScheduleModule.forRoot(),
   ],
-  controllers: [AppController, MoviesController, LoggerController],
-  providers: [
-    AppService,
-    MoviesService,
-    LoggerService,
-  ],
+  controllers: [AppController],
+  providers: [AppService, AiService, MoviesService, ProcessingService, LoggerService],
 })
-export class AppModule {
-  constructor(private readonly configService: ConfigService) { }
-}
+export class AppModule {}

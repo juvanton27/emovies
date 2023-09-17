@@ -1,0 +1,18 @@
+<mat-tab-group class="h-full">
+  <mat-tab label="Info">
+    <div class="grid grid-cols-2 justify-items-center items-center h-full p-4 gap-4">
+      <img *ngIf="movie" [src]="fullPosterPath(movie.posterPath)" [alt]="movie.title" class="h-4/5 rounded-lg">
+      <div>
+        <h1>{{ movie?.title }}</h1>
+        <p>{{ movie?.overview }}</p>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Logs">
+    <div class="h-full flex justify-center items-center">
+      <div class="overflow-scroll m-10 p-4 rounded-lg bg-slate-50">
+        <p *ngFor="let log of logContent">{{ log }}</p>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

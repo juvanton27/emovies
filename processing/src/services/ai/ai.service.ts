@@ -1,18 +1,24 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { exec } from 'child_process';
 import * as fs from 'fs';
 import { InferenceModel, createCompletion, loadModel } from 'gpt4all';
 import * as path from 'path';
-import { Observable, bindCallback, from, map, of } from 'rxjs';
+import { Observable, bindCallback, catchError, from, map, of, throwError } from 'rxjs';
 import { Emotion, allEmotions } from '../../model/emotion.type';
 import { Movie } from '../../model/movie.model';
+import { LoggerService } from '../logger/logger.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AiService {
-  private readonly logger = new Logger(AiService.name)
   private model: InferenceModel;
+  private readonly dataDir: string;
 
-  constructor() {
+  constructor(
+    @Inject(LoggerService) private logger: LoggerService,
+    private readonly configService: ConfigService,
+  ) {
+    this.dataDir = configService.get<string>('directory.data');
     from(loadModel('ggml-vicuna-7b-1.1-q4_2', { verbose: false })).subscribe((m: InferenceModel) => this.model = m);
   }
 
@@ -33,10 +39,17 @@ export class AiService {
             break;
           }
         }
-        if (!emotion) throw new Error('Error while retreiving the emotion of the summary');
+        if (!emotion) throw new NotFoundException('Error while retreiving the emotion of the summary');
         this.logger.verbose(`Found emotion "${emotion}" !`);
         return emotion;
       }),
+      catchError(err => {
+        if (err instanceof NotFoundException) {
+          this.logger.verbose(`Emotion not found, taking "annoyed" by default !`);
+          return of('annoyed' as Emotion);
+        }
+        return throwError(() => err);
+      })
     );
   }
 
@@ -56,7 +69,7 @@ export class AiService {
   }
 
   prepareTextFromTemplate(movie: Movie): string {
-    const templatePath: string = 'data/document/template.txt';
+    const templatePath: string = `${this.dataDir}/document/template.txt`;
     let template: string;
     try {
       template = fs.readFileSync(templatePath, 'utf8');
@@ -89,7 +102,7 @@ export class AiService {
   }
 
   textToSpeech(text: string, filename: string): Observable<string> {
-    const outputDir: string = 'data/audio';
+    const outputDir: string = `${this.dataDir}/audio`;
     const outputFile: string = `${outputDir}/${filename}`;
     if (fs.existsSync(outputFile)) {
       this.logger.verbose(`Text to Speech audio already exists : ${outputFile}. Just retreiving it`);
@@ -110,15 +123,15 @@ export class AiService {
 
   speechToVideo(filepath: string): Observable<string> {
     const id: string = path.basename(filepath, path.extname(filepath));
-    const sourceImage: string = 'data/image/speech_to_video.jpeg';
-    const outputDir: string = 'data/video';
+    const sourceImage: string = `${this.dataDir}/image/speech_to_video.jpeg`;
+    const outputDir: string = `${this.dataDir}/video`;
     const outputFile: string = `${outputDir}/stv_${id}.mp4`;
     if (fs.existsSync(outputFile)) {
       this.logger.verbose(`Speech to Video video already exists : ${outputFile}. Just retreiving it`);
       return of(outputFile);
     }
     if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true })
-    const command: string = `cd data/utils/SadTalker && python3 inference.py --driven_audio ../../../${filepath} --source_image ../../../${sourceImage} --result_dir ../../../${outputDir} --still --preprocess full --enhancer gfpgan`; // Forced to change directory
+    const command: string = `cd utils/SadTalker && python3 inference.py --driven_audio ${filepath} --source_image ${sourceImage} --result_dir ${outputDir} --still --preprocess full --enhancer gfpgan`; // Forced to change directory
     this.logger.verbose(`Transforming speech to video with command "${command}"`)
     return bindCallback(exec)(command, {}).pipe(
       map(([error, stdout, stderr]) => {

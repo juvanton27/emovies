@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Movie } from '../../model/movie.model';
 import { MoviesService } from '../../services/movies/movies.service';
@@ -20,5 +20,10 @@ export class MoviesController {
     let filter: any = {};
     if (uploaded) filter['uploaded'] = uploaded === 'true';
     return this.moviesService.getAll(+pageSize, +skip, filter);
+  }
+
+  @Get(':id')
+  getById(@Param('id') id: string): Observable<Movie> {
+    return this.moviesService.getById(+id);
   }
 }

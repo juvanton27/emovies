@@ -1,0 +1,7 @@
+.angular/
+.vscode/
+node_modules/
+DEV.env
+dist/
+results/
+utils/
