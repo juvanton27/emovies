@@ -3,6 +3,7 @@ import { exec } from 'child_process';
 import * as fs from 'fs';
 import { AppModule } from './app.module';
 import { LoggerService } from './services/logger/logger.service';
+import { ConfigService } from '@nestjs/config';
 
 // Mandatory packages
 const pip: string[] = ['auto_subtitle', 'openai-whisper', 'mycroft-mimic3-tts']; // TO DO: à peaufiner
@@ -11,13 +12,14 @@ const apt: string[] = ['ffmpeg', 'imagemagick',]; // TO DO: à peaufiner
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = app.get(LoggerService);
+  const config = app.get(ConfigService);
   try {
     await checkDependencies(logger);
   } catch (e) {
     console.error(`Dependencies missing : ${e}`);
     process.exit(1);
   }
-  await app.listen(3000);
+  await app.listen(config.get<string>('port'));
 }
 
 function checkDependencies(logger: LoggerService) {

@@ -20,10 +20,7 @@ export class MoviesListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.moviesService.getAll(50, 0, {uploaded: true}).subscribe((movies: SearchResult<Movie>) => {
-      this.movies = movies.result;
-      this.movies = [this.movies[0],this.movies[0],this.movies[0],this.movies[0]]
-    });
+    this.moviesService.getAll(50, 0, {uploaded: true}).subscribe((movies: SearchResult<Movie>) => this.movies = movies.result);
   }
 
   fullPosterPath(path: string): string {
@@ -33,6 +30,7 @@ export class MoviesListComponent implements OnInit {
   openMovieInfo(id: number): void {
     this.dialog.open(MovieInfoComponent, {
       data: id,
+      maxHeight: '80%'
     });
   }
 }

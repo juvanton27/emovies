@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as winston from 'winston';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
+import { sse } from '../../app.controller';
 
 @Injectable()
 export class LoggerService {
@@ -52,6 +53,7 @@ export class LoggerService {
   }
 
   verbose(message: string) {
+    if (this.logger.transports.length > 1) sse.next({data: {message}});
     this.logger.info(message);
   }
 }

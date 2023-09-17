@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { Movie } from '../model/movie.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SearchResult } from '../model/search-result.model';
@@ -20,11 +20,25 @@ export class MoviesService {
     params = params.append('pageSize', pageSize);
     params = params.append('skip', skip);
     if (filter?.uploaded) params.append('uploaded', filter.uploaded);
-    return this.http.get<SearchResult<Movie>>(url, {params});
+    return this.http.get<SearchResult<Movie>>(url, { params });
   }
 
   getById(id: number): Observable<Movie> {
     const url = `${this.endpoint}/movies/${id}`;
     return this.http.get<Movie>(url);
+  }
+
+  getResult(id: number): Observable<string> {
+    const url = `${this.endpoint}/movies/result/${id}`;
+    return this.http.get(url, { responseType: 'text' }).pipe(
+      map((data: string) => {
+        console.log(data);
+        return data
+        const blob = new Blob([data], { type: "video/mp4" });
+        console.log(blob);
+        
+        return URL.createObjectURL(blob);
+      })
+    );
   }
 }

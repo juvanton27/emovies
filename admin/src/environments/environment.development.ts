@@ -7,6 +7,7 @@ export const environment = {
   },
   endpoint: {
     backend: 'api-backend',
+    processing: 'api-processing',
     tmdb_image: 'https://image.tmdb.org/t/p/original',
   }
 };

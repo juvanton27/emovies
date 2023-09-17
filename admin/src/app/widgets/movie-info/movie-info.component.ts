@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MoviesService } from '../../services/movies.service';
 import { Movie } from '../../model/movie.model';
@@ -11,9 +11,15 @@ import { Subscription, concatMap, interval, map, tap } from 'rxjs';
   styleUrls: ['./movie-info.component.scss']
 })
 export class MovieInfoComponent implements OnInit, OnDestroy {
+  @ViewChild('terminal') terminal!: ElementRef;
   movie?: Movie;
+
+  // Logs
   logContent: string[] = [];
   private logSubscription!: Subscription;
+
+  // Results
+  resultContent: string = '';
 
   constructor(
     @Inject('API_TMDB_IMAGE') private readonly tmdbImage: string,
@@ -28,11 +34,17 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.moviesService.getById(this.id).subscribe((movie: Movie) => this.movie = movie);
-    this.loggerService.getById(this.id).subscribe((data: string) => this.logContent = data.split('\n'));
+    this.moviesService.getById(this.id).subscribe((movie: Movie) => {
+      this.movie = movie;
+      this.resultContent = '/api-backend/movies/result/'+this.id;
+    });
+    this.loggerService.getById(this.id).pipe(
+      map((data: string) => this.logContent = data.split('\n')),
+    ).subscribe(() => this.terminal.nativeElement.scrollTop = this.terminal.nativeElement.scrollHeight);
     this.logSubscription = interval(5000).pipe(
-      concatMap(() => this.loggerService.getById(this.id))
-    ).subscribe((data: string) => this.logContent = data.split('\n'));
+      concatMap(() => this.loggerService.getById(this.id)),
+      map((data: string) => this.logContent = data.split('\n'))
+    ).subscribe(() => this.terminal.nativeElement.scrollTop = this.terminal.nativeElement.scrollHeight);
   }
 
   fullPosterPath(path: string): string {

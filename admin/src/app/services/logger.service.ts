@@ -12,7 +12,7 @@ export class LoggerService {
     private readonly http: HttpClient,
   ) { }
 
-  getById(id: number): Observable<any> {
+  getById(id: number): Observable<string> {
     const url = `${this.endpoint}/logger/${id}`;
     return this.http.get(url, {responseType: 'text'})
   }

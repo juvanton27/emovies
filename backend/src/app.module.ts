@@ -1,4 +1,3 @@
-import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,9 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MovieDbo } from './dbo/movie.dbo';
 import { MoviesService } from './services/movies/movies.service';
-import { ScheduleModule } from '@nestjs/schedule';
 import { MoviesController } from './controllers/movies/movies.controller';
-import { LoggerService } from './services/logger/logger.service';
 import { LoggerController } from './controllers/logger/logger.controller';
 
 const detectEnvFile = (): string => {
@@ -33,7 +30,6 @@ const detectEnvFile = (): string => {
       load: [configuration],
       isGlobal: true
     }),
-    HttpModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -49,13 +45,11 @@ const detectEnvFile = (): string => {
       })
     }),
     TypeOrmModule.forFeature([MovieDbo]),
-    ScheduleModule.forRoot(),
   ],
   controllers: [AppController, MoviesController, LoggerController],
   providers: [
     AppService,
     MoviesService,
-    LoggerService,
   ],
 })
 export class AppModule {

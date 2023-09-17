@@ -9,5 +9,9 @@ export default () => ({
     username: process.env.DB_USERNAME || 'root',
     password: process.env.DB_PASSWORD || 'root',
     name: process.env.DB_NAME || 'db',
+  },
+  directory: {
+    logs: process.env.LOGS_DIR || '/media/logs',
+    results: process.env.RESULTS_DIR || '/media/results'
   }
 })

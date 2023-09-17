@@ -56,6 +56,7 @@ const initializer = (keycloak: KeycloakService, ngZone: NgZone) =>
       deps: [KeycloakService, NgZone]
     },
     { provide: 'API_BACKEND', useValue: environment.endpoint.backend },
+    { provide: 'API_PROCESSING', useValue: environment.endpoint.processing },
     { provide: 'API_TMDB_IMAGE', useValue: environment.endpoint.tmdb_image },
   ],
   bootstrap: [AppComponent]

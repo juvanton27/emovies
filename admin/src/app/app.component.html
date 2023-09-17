@@ -4,12 +4,20 @@
   </mat-toolbar>
   <mat-drawer-container class="h-[calc(100%-64px)]">
     <mat-drawer mode="side" opened class="p-[16px] w-[300px]">
-      <div class="flex flex-col gap-2">
-        <a *ngFor="let route of routes" [routerLink]="route.link" class="mat-drawer-button"
-          routerLinkActive="mat-drawer-button-active">
-          <mat-icon>{{ route.icon }}</mat-icon>
-          <h1>{{ route.title }}</h1>
-        </a>
+      <div class="flex flex-col gap-2 justify-between h-full">
+        <div>
+          <a *ngFor="let route of routes" [routerLink]="route.link" class="mat-drawer-button"
+            routerLinkActive="mat-drawer-button-active">
+            <mat-icon>{{ route.icon }}</mat-icon>
+            <h1>{{ route.title }}</h1>
+          </a>
+        </div>
+        <div class="bg-slate-50 rounded-lg">
+          <mat-progress-bar mode="indeterminate" class="top-0 rounded-t-lg"></mat-progress-bar>
+          <div class="p-4">
+            <p>{{ currentState }}</p>
+          </div>
+        </div>
       </div>
     </mat-drawer>
     <mat-drawer-content>

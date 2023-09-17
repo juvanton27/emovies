@@ -1,5 +1,5 @@
 export default () => ({
-  port: +process.env.PORT || 3000,
+  port: +process.env.PORT || 3001,
   tmdb: {
     token: process.env.TMDB_TOKEN || 'token'
   },

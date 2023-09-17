@@ -1,16 +1,24 @@
 <mat-tab-group class="h-full">
   <mat-tab label="Info">
     <div class="grid grid-cols-2 justify-items-center items-center h-full p-4 gap-4">
-      <img *ngIf="movie" [src]="fullPosterPath(movie.posterPath)" [alt]="movie.title" class="h-4/5 rounded-lg">
+      <img *ngIf="movie" [src]="fullPosterPath(movie.posterPath)" [alt]="movie.title" class="h-max w-max max-h-[70vh] rounded-lg">
       <div>
         <h1>{{ movie?.title }}</h1>
         <p>{{ movie?.overview }}</p>
       </div>
     </div>
   </mat-tab>
+  <mat-tab label="Result">
+    <div class="h-full">
+      <video width="320" height="240" controls>
+        <source [src]="resultContent" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </mat-tab>
   <mat-tab label="Logs">
     <div class="h-full flex justify-center items-center">
-      <div class="overflow-scroll m-10 p-4 rounded-lg bg-slate-50">
+      <div #terminal class="max-h-[70vh] overflow-scroll m-10 p-4 rounded-lg bg-slate-50 font-['Courier_New'] text-sm">
         <p *ngFor="let log of logContent">{{ log }}</p>
       </div>
     </div>

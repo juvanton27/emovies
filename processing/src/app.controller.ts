@@ -1,13 +1,21 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, MessageEvent, Sse } from '@nestjs/common';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { AppService } from './app.service';
-import { Observable } from 'rxjs';
+
+export const sse = new BehaviorSubject<MessageEvent>({ data: undefined })
+const onCurrentSse = sse.asObservable();
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) { }
 
   @Get()
-  getHello(): Observable<any> {
+  generateVideo(): Observable<any> {
     return this.appService.generateVideo();
+  }
+
+  @Sse('sse')
+  sse(): Observable<MessageEvent> {
+    return onCurrentSse;
   }
 }
