@@ -7,6 +7,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { environment } from '../environments/environment.development';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { DashboardModule } from './pages/dashboard/dashboard.module';
+import { VideosModule } from './pages/videos/videos.module';
+import { HttpClientModule } from '@angular/common/http';
 
 const initializer = (keycloak: KeycloakService, ngZone: NgZone) => 
   (): Promise<any> => 
@@ -29,14 +33,17 @@ const initializer = (keycloak: KeycloakService, ngZone: NgZone) =>
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    KeycloakAngularModule
+    KeycloakAngularModule,
+    DashboardModule,
+    VideosModule,
+    HttpClientModule
   ],
   providers: [
     {
@@ -44,7 +51,8 @@ const initializer = (keycloak: KeycloakService, ngZone: NgZone) =>
       useFactory: initializer,
       multi: true,
       deps: [KeycloakService, NgZone]
-    }
+    },
+    { provide: 'API_BACKEND', useValue: environment.endpoint.backend }
   ],
   bootstrap: [AppComponent]
 })

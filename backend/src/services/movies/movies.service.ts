@@ -3,7 +3,7 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Observable, concatMap, from, map, of, tap, toArray } from 'rxjs';
-import { MetadataAlreadyExistsError, Repository } from 'typeorm';
+import { FindOptionsWhere, MetadataAlreadyExistsError, Repository } from 'typeorm';
 import { MovieDbo } from '../../dbo/movie.dbo';
 import { MovieTMDBDbo } from '../../dbo/movie.tmdb.dbo';
 import { MovieMapper } from '../../mappers/movies.mapper';
@@ -12,6 +12,7 @@ import { Movie } from '../../model/movie.model';
 import { AiService } from '../ai/ai.service';
 import * as fs from 'fs';
 import * as path from 'path';
+import { SearchResult } from '../../model/search-result.model';
 
 @Injectable()
 export class MoviesService {
@@ -90,5 +91,17 @@ export class MoviesService {
 
   countByEmotion(emotion: Emotion): Observable<number> {
     return from(this.moviesRepo.countBy({emotion}));
+  }
+
+  getAll(pageSize: number, skip: number, filter?: any): Observable<SearchResult<Movie>> {
+    let where: FindOptionsWhere<MovieDbo> = {};
+    return from(this.moviesRepo.findAndCount({where, take: pageSize, skip})).pipe(
+      map(([dbos, totalCount]) => ({
+        totalCount,
+        pageSize,
+        skip,
+        result: dbos.map(dbo => MovieMapper.fromDbo(dbo)),
+      }))
+    )
   }
 }

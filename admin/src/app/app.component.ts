@@ -6,5 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'admin';
+  routes: {title: string, link: string, icon: string}[] = [
+    {title: 'Dashboard', link: '/dashboard', icon: 'dashboard'},
+    {title: 'Videos', link: '/videos', icon: 'videocam'},
+  ];
 }

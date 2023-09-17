@@ -1,0 +1,7 @@
+.mat-drawer-button {
+  @apply flex gap-2 py-2 px-4 rounded-lg hover:cursor-pointer
+}
+
+.mat-drawer-button-active {
+  @apply bg-slate-50
+}
