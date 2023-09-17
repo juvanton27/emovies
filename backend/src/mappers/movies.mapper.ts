@@ -10,7 +10,8 @@ export class MovieMapper {
       title: dbo.title,
       overview: summary??dbo.overview,
       emotion,
-      posterPath: dbo.poster_path
+      posterPath: dbo.poster_path,
+      uploaded: false,
     }
   }
 
@@ -20,7 +21,8 @@ export class MovieMapper {
       title: dbo.title,
       overview: dbo.overview,
       emotion: dbo.emotion,
-      posterPath: dbo.poster_path
+      posterPath: dbo.poster_path,
+      uploaded: dbo.uploaded
     }
   }
 
@@ -30,7 +32,8 @@ export class MovieMapper {
       title: movie.title,
       overview: movie.overview,
       emotion: movie.emotion,
-      poster_path: movie.posterPath
+      poster_path: movie.posterPath,
+      uploaded: movie.uploaded
     };
   }
 }

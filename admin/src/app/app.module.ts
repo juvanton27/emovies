@@ -11,6 +11,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { DashboardModule } from './pages/dashboard/dashboard.module';
 import { VideosModule } from './pages/videos/videos.module';
 import { HttpClientModule } from '@angular/common/http';
+import { MoviesListComponent } from './widgets/movies-list/movies-list.component';
+import { WidgetsModule } from './widgets/widgets.module';
 
 const initializer = (keycloak: KeycloakService, ngZone: NgZone) => 
   (): Promise<any> => 
@@ -42,8 +44,9 @@ const initializer = (keycloak: KeycloakService, ngZone: NgZone) =>
     MaterialModule,
     KeycloakAngularModule,
     DashboardModule,
+    HttpClientModule,
     VideosModule,
-    HttpClientModule
+    WidgetsModule
   ],
   providers: [
     {
@@ -52,7 +55,8 @@ const initializer = (keycloak: KeycloakService, ngZone: NgZone) =>
       multi: true,
       deps: [KeycloakService, NgZone]
     },
-    { provide: 'API_BACKEND', useValue: environment.endpoint.backend }
+    { provide: 'API_BACKEND', useValue: environment.endpoint.backend },
+    { provide: 'API_TMDB_IMAGE', useValue: environment.endpoint.tmdb_image },
   ],
   bootstrap: [AppComponent]
 })

@@ -17,4 +17,7 @@ export class MovieDbo {
 
   @Column()
   poster_path: string;
+
+  @Column({default: false})
+  uploaded: boolean;
 }

@@ -6,13 +6,4 @@ import { MoviesService } from '../../services/movies.service';
   templateUrl: './videos.component.html',
   styleUrls: ['./videos.component.scss']
 })
-export class VideosComponent implements OnInit {
-
-  constructor(
-    private readonly moviesService: MoviesService,
-  ) { }
-  
-  ngOnInit(): void {
-    this.moviesService.getAll(50, 0).subscribe(console.log);
-  }
-}
+export class VideosComponent { }

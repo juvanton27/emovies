@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Observable, concatMap, from, map, of, tap, toArray } from 'rxjs';
@@ -43,7 +43,7 @@ export class MoviesService {
     return this.axios.get(url, {headers: this.headers}).pipe(
       concatMap(({data}: {data: {results: MovieTMDBDbo[]}}) => from(data.results)),
       concatMap((movie: MovieTMDBDbo) => {
-        return from(this.moviesRepo.findOneBy({id: movie.id})).pipe(
+        return from(this.moviesRepo.findOneBy({id: movie.id, uploaded: true})).pipe(
           map((dbo: MovieDbo) => !dbo ? movie : undefined)
         );
       }),
@@ -95,6 +95,7 @@ export class MoviesService {
 
   getAll(pageSize: number, skip: number, filter?: any): Observable<SearchResult<Movie>> {
     let where: FindOptionsWhere<MovieDbo> = {};
+    if (filter?.uploaded !== undefined) where['uploaded'] = filter.uploaded;
     return from(this.moviesRepo.findAndCount({where, take: pageSize, skip})).pipe(
       map(([dbos, totalCount]) => ({
         totalCount,
@@ -103,5 +104,15 @@ export class MoviesService {
         result: dbos.map(dbo => MovieMapper.fromDbo(dbo)),
       }))
     )
+  }
+
+  setUploaded(id: number, uploaded: boolean): Observable<Movie> {
+    return from(this.moviesRepo.findOneBy({id})).pipe(
+      concatMap((dbo: MovieDbo) => {
+        if (!dbo) throw new NotFoundException(`No movie with id ${id} found`);
+        return from(this.moviesRepo.save({id, uploaded}));
+      }),
+      map((dbo: MovieDbo) => MovieMapper.fromDbo(dbo)),
+    );
   }
 }

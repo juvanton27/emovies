@@ -6,4 +6,5 @@ export interface Movie {
   overview: string;
   emotion: Emotion;
   posterPath: string;
+  uploaded: boolean;
 }

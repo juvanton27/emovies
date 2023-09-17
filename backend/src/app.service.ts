@@ -18,15 +18,18 @@ export class AppService {
   generateVideo(): Observable<any> {
     return this.moviesService.findTrendingMovie().pipe(
       concatMap((movie: Movie) => {
-        const summary = this.aiService.prepareTextFromTemplate(movie);
-        return this.aiService.textToSpeech(summary, `${movie.id}.wav`).pipe(
+        return this.moviesService.create(movie).pipe(
+          concatMap(() => {
+            const summary = this.aiService.prepareTextFromTemplate(movie);
+            return this.aiService.textToSpeech(summary, `${movie.id}.wav`);
+          }),
           concatMap((fullpath: string) => this.aiService.speechToVideo(fullpath)),
           concatMap(() => this.moviesService.downloadPoster(movie)),
           concatMap(() => this.processingService.mountVideo(movie)),
           concatMap((fullpath: string) => this.processingService.createVideoTitleByEmotion(movie.emotion).pipe(
             concatMap((title: string) => this.processingService.uploadOnYouTube(title, movie.overview, fullpath)),
           )),
-          concatMap(() => this.moviesService.create(movie)),
+          concatMap(() => this.moviesService.setUploaded(movie.id, true)),
         );
       }),
     );

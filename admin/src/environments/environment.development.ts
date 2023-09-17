@@ -6,6 +6,7 @@ export const environment = {
     clientId: 'admin-cli'
   },
   endpoint: {
-    backend: 'api-backend'
+    backend: 'api-backend',
+    tmdb_image: 'https://image.tmdb.org/t/p/original',
   }
 };
