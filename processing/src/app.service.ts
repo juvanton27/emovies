@@ -25,15 +25,19 @@ export class AppService {
       concatMap((tmdbDbo: MovieTMDBDbo) => {
         const fileTransport = this.logger.createFileTransport(tmdbDbo.id);
         this.logger.addTransport(fileTransport);
-        this.logger.verbose(`Working with movie "${tmdbDbo.title}" !`);
-        return this.aiService.findEmotionFromSummary(tmdbDbo.overview).pipe(
-          concatMap((emotion: Emotion) => this.aiService.rephraseSummary(tmdbDbo.overview).pipe(
+        this.logger.verbose(`Working with movie "${tmdbDbo.title}" !`, tmdbDbo.id, tmdbDbo.title, tmdbDbo.poster_path, false);
+
+        return this.aiService.findEmotionFromSummary(tmdbDbo.id, tmdbDbo.overview).pipe(
+          concatMap((emotion: Emotion) => this.aiService.rephraseSummary(tmdbDbo.id, tmdbDbo.overview).pipe(
             map((summary: string) => MovieMapper.fromTMDBDbo(tmdbDbo, emotion, summary)),
           )),
           concatMap((movie: Movie) => {
             return this.moviesService.create(movie).pipe(
               catchError(err => {
-                if (err instanceof BadRequestException) return of(undefined);
+                if (err instanceof BadRequestException) {
+                  this.logger.verbose(`Film with id ${movie.id} created`, tmdbDbo.id, tmdbDbo.title, tmdbDbo.poster_path, false, true)
+                  return of(undefined);
+                }
                 return throwError(() => err);
               }),
               concatMap(() => {
@@ -44,12 +48,15 @@ export class AppService {
               concatMap(() => this.moviesService.downloadPoster(movie)),
               concatMap(() => this.processingService.mountVideo(movie)),
               concatMap((fullpath: string) => this.processingService.createVideoTitleByEmotion(movie.emotion).pipe(
-                // concatMap((title: string) => this.processingService.uploadOnYouTube(title, movie.overview, fullpath)),
+                concatMap((title: string) => this.processingService.uploadOnYouTube(title, movie.overview, fullpath)),
               )),
               concatMap(() => this.moviesService.setUploaded(movie.id, true)),
-              tap(() => this.logger.removeTransport(fileTransport)),
+              tap(() => {
+                this.logger.verbose(`Movie "${movie.title}" succefully added !`, undefined, undefined, undefined, true, true);
+                this.logger.removeTransport(fileTransport)
+              }),
               catchError((err) => {
-                this.logger.verbose(err.message);
+                this.logger.verbose(err.message, undefined, undefined, undefined, true);
                 this.logger.removeTransport(fileTransport)
                 return throwError(() => err);
               }),

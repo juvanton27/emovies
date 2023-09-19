@@ -145,7 +145,7 @@ export class ProcessingService {
    */
   uploadOnYouTube(title: string, description: string, videoPath: string): Observable<boolean> {
     this.logger.verbose(`Uploading "${videoPath}" ...`);
-    const pythonScriptPath: string = `${this.dataDir}/utils/youtube-bot/main.py`;
+    const pythonScriptPath: string = `utils/youtube-bot/main.py`;
     const absPath = path.resolve(videoPath);
     const command: string = `python3 ${pythonScriptPath} --title "${title}" --description "${description}" --path "${absPath}"`;
     return bindCallback(exec)(command, {}).pipe(

@@ -97,4 +97,13 @@ export class MoviesService {
       map((dbo: MovieDbo) => MovieMapper.fromDbo(dbo)),
     );
   }
+
+  getById(id: number): Observable<Movie> {
+    return from(this.moviesRepo.findOneBy({id})).pipe(
+      map((dbo: MovieDbo) => {
+        if (!dbo) throw new NotFoundException(`No movie found with id ${id} !`);
+        return MovieMapper.fromDbo(dbo);
+      })
+    )
+  }
 }

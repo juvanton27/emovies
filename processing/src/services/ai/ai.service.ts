@@ -8,6 +8,7 @@ import { Emotion, allEmotions } from '../../model/emotion.type';
 import { Movie } from '../../model/movie.model';
 import { LoggerService } from '../logger/logger.service';
 import { ConfigService } from '@nestjs/config';
+import { MoviesService } from '../movies/movies.service';
 
 @Injectable()
 export class AiService {
@@ -16,54 +17,73 @@ export class AiService {
 
   constructor(
     @Inject(LoggerService) private logger: LoggerService,
+    private readonly moviesService: MoviesService,
     private readonly configService: ConfigService,
   ) {
     this.dataDir = configService.get<string>('directory.data');
     from(loadModel('ggml-vicuna-7b-1.1-q4_2', { verbose: false })).subscribe((m: InferenceModel) => this.model = m);
   }
 
-  findEmotionFromSummary(summary: string): Observable<Emotion> {
+  findEmotionFromSummary(id: number, summary: string): Observable<Emotion> {
     this.logger.verbose('Finding emotion ...');
     const emotions: string = allEmotions.join(', ');
-    return from(createCompletion(this.model, [
-      { role: 'user', content: `For a movie whose summary is "${summary}", which emotion results most between ${emotions} ? Answer in only one word, the emotion` }
-    ])).pipe(
-      map((response: any) => {
-        if (!response || response?.choices.length === 0) throw new Error('Error while asking for the emotion');
-        const generatedSentence: string = response.choices[0].message.content;
-        this.logger.verbose(`AI responded : "${generatedSentence}"`);
-        let emotion: Emotion;
-        for (const word of generatedSentence.split(' ')) {
-          if (allEmotions.includes(word.toLowerCase() as Emotion)) {
-            emotion = word.toLowerCase() as Emotion;
-            break;
-          }
-        }
-        if (!emotion) throw new NotFoundException('Error while retreiving the emotion of the summary');
-        this.logger.verbose(`Found emotion "${emotion}" !`);
-        return emotion;
+    return this.moviesService.getById(id).pipe(
+      map((movie: Movie) => {
+        this.logger.verbose('Emotion already exists. Just retreiving it ...');
+        return movie.emotion
       }),
       catchError(err => {
-        if (err instanceof NotFoundException) {
-          this.logger.verbose(`Emotion not found, taking "annoyed" by default !`);
-          return of('annoyed' as Emotion);
-        }
-        return throwError(() => err);
+        if (!(err instanceof NotFoundException)) return throwError(() => err);
+        return from(createCompletion(this.model, [
+          { role: 'user', content: `For a movie whose summary is "${summary}", which emotion results most between ${emotions} ? Answer in only one word, the emotion` }
+        ])).pipe(
+          map((response: any) => {
+            if (!response || response?.choices.length === 0) throw new Error('Error while asking for the emotion');
+            const generatedSentence: string = response.choices[0].message.content;
+            this.logger.verbose(`AI responded : "${generatedSentence}"`);
+            let emotion: Emotion;
+            for (const word of generatedSentence.split(' ')) {
+              if (allEmotions.includes(word.toLowerCase() as Emotion)) {
+                emotion = word.toLowerCase() as Emotion;
+                break;
+              }
+            }
+            if (!emotion) throw new NotFoundException('Error while retreiving the emotion of the summary');
+            this.logger.verbose(`Found emotion "${emotion}" !`);
+            return emotion;
+          }),
+          catchError(err => {
+            if (err instanceof NotFoundException) {
+              this.logger.verbose(`Emotion not found, taking "annoyed" by default !`);
+              return of('annoyed' as Emotion);
+            }
+            return throwError(() => err);
+          })
+        );
       })
-    );
+    )
   }
 
-  rephraseSummary(summary: string): Observable<string> {
+  rephraseSummary(id: number, summary: string): Observable<string> {
     this.logger.verbose('Rephrasing summary ...');
-    return from(createCompletion(this.model, [
-      { role: 'user', content: `Rephrase this summary for me as if you had to convince a friend to watch it when addressing an audience by beginning with "Hey guys": "${summary}"` }
-    ])).pipe(
-      map((response: any) => {
-        if (!response || response?.choices.length === 0) throw new Error('Error while asking for a rephrase');
-        let summary: string = response.choices[0].message.content;
-        summary = summary.substring(1, summary.length - 1);
-        this.logger.verbose(`Rephrased to : "${summary.slice(0, 30)}"`);
-        return summary;
+    return this.moviesService.getById(id).pipe(
+      map((movie: Movie) => {
+        this.logger.verbose('Summary already exists. Just retreiving it ...');
+        return movie.overview;
+      }),
+      catchError(err => {
+        if (!(err instanceof NotFoundException)) return throwError(() => err);
+        return from(createCompletion(this.model, [
+          { role: 'user', content: `Rephrase this summary for me as if you had to convince a friend to watch it when addressing an audience by beginning with "Hey guys": "${summary}"` }
+        ])).pipe(
+          map((response: any) => {
+            if (!response || response?.choices.length === 0) throw new Error('Error while asking for a rephrase');
+            let summary: string = response.choices[0].message.content;
+            summary = summary.substring(1, summary.length - 1);
+            this.logger.verbose(`Rephrased to : "${summary.slice(0, 30)}"`);
+            return summary;
+          })
+        );
       })
     )
   }

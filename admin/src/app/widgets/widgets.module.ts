@@ -3,13 +3,15 @@ import { CommonModule } from '@angular/common';
 import { MoviesListComponent } from './movies-list/movies-list.component';
 import { MaterialModule } from '../material.module';
 import { MovieInfoComponent } from './movie-info/movie-info.component';
+import { ProcessingStateComponent } from './processing-state/processing-state.component';
 
 
 
 @NgModule({
   declarations: [
     MoviesListComponent,
-    MovieInfoComponent
+    MovieInfoComponent,
+    ProcessingStateComponent
   ],
   imports: [
     CommonModule,
@@ -17,7 +19,8 @@ import { MovieInfoComponent } from './movie-info/movie-info.component';
   ],
   exports: [
     MoviesListComponent,
-    MovieInfoComponent
+    MovieInfoComponent,
+    ProcessingStateComponent
   ]
 })
 export class WidgetsModule { }
