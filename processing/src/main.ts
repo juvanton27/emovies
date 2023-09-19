@@ -14,7 +14,7 @@ async function bootstrap() {
   const logger = app.get(LoggerService);
   const config = app.get(ConfigService);
   try {
-    // await checkDependencies(logger);
+    await checkDependencies(logger);
   } catch (e) {
     console.error(`Dependencies missing : ${e}`);
     process.exit(1);
