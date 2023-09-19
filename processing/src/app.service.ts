@@ -20,6 +20,10 @@ export class AppService {
   ) { }
 
   @Cron(CronExpression.EVERY_DAY_AT_NOON)
+  generateVideoOnCron(): void {
+    this.generateVideo().subscribe();
+  }
+
   generateVideo(): Observable<any> {
     return this.moviesService.findTrendingMovie().pipe(
       concatMap((tmdbDbo: MovieTMDBDbo) => {

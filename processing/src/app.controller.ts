@@ -17,17 +17,6 @@ export class AppController {
 
   @Sse('sse')
   sse(): Observable<MessageEvent> {
-    // return interval(5000).pipe(
-    //   tap(console.log),
-    //   map(n => ({
-    //     data: { 
-    //       message: `message${n}`,
-    //       id: `id${n}`,
-    //       title: `type${n}`,
-    //       stop: 1
-    //     },
-    //   }))
-    // )
     return this.logger.onCurrentLog;
   }
 
