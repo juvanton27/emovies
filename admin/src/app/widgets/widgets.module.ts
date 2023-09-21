@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MoviesListComponent } from './movies-list/movies-list.component';
+import { VideosListComponent } from './videos-list/videos-list.component';
 import { MaterialModule } from '../material.module';
-import { MovieInfoComponent } from './movie-info/movie-info.component';
+import { VideoInfoComponent } from './video-info/video-info.component';
 import { ProcessingStateComponent } from './processing-state/processing-state.component';
 
 
 
 @NgModule({
   declarations: [
-    MoviesListComponent,
-    MovieInfoComponent,
+    VideosListComponent,
+    VideoInfoComponent,
     ProcessingStateComponent
   ],
   imports: [
@@ -18,8 +18,8 @@ import { ProcessingStateComponent } from './processing-state/processing-state.co
     MaterialModule
   ],
   exports: [
-    MoviesListComponent,
-    MovieInfoComponent,
+    VideosListComponent,
+    VideoInfoComponent,
     ProcessingStateComponent
   ]
 })

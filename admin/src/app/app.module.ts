@@ -7,12 +7,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { environment } from '../environments/environment.development';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { DashboardModule } from './pages/dashboard/dashboard.module';
-import { VideosModule } from './pages/videos/videos.module';
 import { HttpClientModule } from '@angular/common/http';
-import { MoviesListComponent } from './widgets/movies-list/movies-list.component';
 import { WidgetsModule } from './widgets/widgets.module';
+import { MoviesModule } from './pages/movies/movies.module';
 
 const initializer = (keycloak: KeycloakService, ngZone: NgZone) => 
   (): Promise<any> => 
@@ -45,7 +43,7 @@ const initializer = (keycloak: KeycloakService, ngZone: NgZone) =>
     KeycloakAngularModule,
     DashboardModule,
     HttpClientModule,
-    VideosModule,
+    MoviesModule,
     WidgetsModule
   ],
   providers: [

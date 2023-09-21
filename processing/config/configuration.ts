@@ -14,5 +14,8 @@ export default () => ({
     data: process.env.DATA_DIR || '/media/data',
     results: process.env.RESULTS_DIR || '/media/results',
     logs: process.env.LOGS_DIR || '/media/logs',
+  },
+  options: {
+    checkDependencies: process.env.CHECK_DEPENDENCIES || false
   }
 })

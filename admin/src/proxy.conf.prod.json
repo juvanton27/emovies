@@ -1,6 +1,6 @@
 {
   "/api-backend": {
-    "target": "http://192.168.0.189:3100",
+    "target": "http://192.168.0.189:3000",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
@@ -9,7 +9,7 @@
     }
   },
   "/api-processing": {
-    "target": "http://192.168.0.189:3101",
+    "target": "http://192.168.0.189:3001",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,

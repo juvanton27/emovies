@@ -11,7 +11,7 @@ import { LoggerService } from './services/logger.service';
 export class AppComponent implements OnInit {
   routes: { title: string, link: string, icon: string }[] = [
     { title: 'Dashboard', link: '/dashboard', icon: 'dashboard' },
-    { title: 'Videos', link: '/videos', icon: 'videocam' },
+    { title: 'Movies', link: '/movies', icon: 'videocam' },
   ];
   showSidenav = true;
   logs?: Log;

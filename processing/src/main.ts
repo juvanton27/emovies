@@ -13,17 +13,22 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = app.get(LoggerService);
   const config = app.get(ConfigService);
-  try {
-    await checkDependencies(logger);
-  } catch (e) {
-    console.error(`Dependencies missing : ${e}`);
-    process.exit(1);
+  const shouldCheckDependencies = config.get<boolean>('options.checkDependencies');
+  if (shouldCheckDependencies === true) {
+    logger.verbose('Checking dependencies ...');
+    try {
+      await checkDependencies(logger);
+    } catch (e) {
+      console.error(`Dependencies missing : ${e}`);
+      process.exit(1);
+    }
+  } else {
+    logger.verbose('Skipping dependencies check ...');
   }
   await app.listen(config.get<string>('port'));
 }
 
 function checkDependencies(logger: LoggerService) {
-  logger.verbose('Checking dependencies ...');
   return new Promise<void>((resolve, reject) => {
     const errors: Error[] = [];
     if (!fs.existsSync('utils/youtube-bot')) errors.push(new Error('"youtube-bot" folder missing in "utils"'));

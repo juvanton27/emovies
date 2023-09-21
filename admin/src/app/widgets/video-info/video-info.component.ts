@@ -6,11 +6,11 @@ import { LoggerService } from '../../services/logger.service';
 import { Subscription, concatMap, interval, map, tap } from 'rxjs';
 
 @Component({
-  selector: 'app-movie-info',
-  templateUrl: './movie-info.component.html',
-  styleUrls: ['./movie-info.component.scss']
+  selector: 'app-video-info',
+  templateUrl: './video-info.component.html',
+  styleUrls: ['./video-info.component.scss']
 })
-export class MovieInfoComponent implements OnInit, OnDestroy {
+export class VideoInfoComponent implements OnInit, OnDestroy {
   @ViewChild('terminal') terminal!: ElementRef;
   movie?: Movie;
 
@@ -23,7 +23,7 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject('API_TMDB_IMAGE') private readonly tmdbImage: string,
-    public dialogRef: MatDialogRef<MovieInfoComponent>,
+    public dialogRef: MatDialogRef<VideoInfoComponent>,
     @Inject(MAT_DIALOG_DATA) public id: number,
     private readonly moviesService: MoviesService,
     private readonly loggerService: LoggerService

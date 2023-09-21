@@ -3,16 +3,16 @@ import { MatDialog } from '@angular/material/dialog';
 import { Movie } from '../../model/movie.model';
 import { SearchResult } from '../../model/search-result.model';
 import { MoviesService } from '../../services/movies.service';
-import { MovieInfoComponent } from '../movie-info/movie-info.component';
+import { VideoInfoComponent } from '../video-info/video-info.component';
 import { LoggerService } from '../../services/logger.service';
 import { Log } from '../../model/log.model';
 
 @Component({
-  selector: 'app-movies-list',
-  templateUrl: './movies-list.component.html',
-  styleUrls: ['./movies-list.component.scss']
+  selector: 'app-videos-list',
+  templateUrl: './videos-list.component.html',
+  styleUrls: ['./videos-list.component.scss']
 })
-export class MoviesListComponent implements OnInit {
+export class VideosListComponent implements OnInit {
   movies: Movie[] = [];
   
   constructor(
@@ -24,7 +24,7 @@ export class MoviesListComponent implements OnInit {
 
   ngOnInit(): void {
     this.refreshMovies();
-    this.loggerService.onCurrentLogs.subscribe((logs: Log) => logs.refresh ? this.refreshMovies() : '');
+    this.loggerService.onCurrentLogs.subscribe((logs: Log) => logs?.refresh ? this.refreshMovies() : '');
   }
 
   fullPosterPath(path: string): string {
@@ -32,7 +32,7 @@ export class MoviesListComponent implements OnInit {
   }
 
   openMovieInfo(id: number): void {
-    this.dialog.open(MovieInfoComponent, {
+    this.dialog.open(VideoInfoComponent, {
       data: id,
       maxHeight: '80%'
     });
