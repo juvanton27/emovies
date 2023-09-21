@@ -1,35 +1,36 @@
 import { APP_INITIALIZER, NgModule, NgZone } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './material.module';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { environment } from '../environments/environment.development';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { MaterialModule } from './material.module';
 import { DashboardModule } from './pages/dashboard/dashboard.module';
-import { HttpClientModule } from '@angular/common/http';
-import { WidgetsModule } from './widgets/widgets.module';
 import { MoviesModule } from './pages/movies/movies.module';
+import { WidgetsModule } from './widgets/widgets.module';
 
-const initializer = (keycloak: KeycloakService, ngZone: NgZone) => 
-  (): Promise<any> => 
-  new Promise((resolve, reject) => {
-    ngZone.runOutsideAngular(() => {
-      try {
-        resolve(keycloak.init({
-          config: environment.keycloak,
-          initOptions: {
-            onLoad: 'login-required',
-            checkLoginIframe: false,
-          },
-          enableBearerInterceptor: true
-        }));
-      } catch (e) {
-        reject(e);
-      }
+const initializer = (keycloak: KeycloakService, ngZone: NgZone) =>
+  (): Promise<any> =>
+    new Promise((resolve, reject) => {
+      ngZone.runOutsideAngular(() => {
+        try {
+          resolve(keycloak.init({
+            config: environment.keycloak,
+            initOptions: {
+              onLoad: 'login-required',
+              checkLoginIframe: false,
+            },
+            enableBearerInterceptor: true
+          }));
+        } catch (e) {
+          reject(e);
+        }
+      });
     });
-  });
 
 @NgModule({
   declarations: [
@@ -44,7 +45,9 @@ const initializer = (keycloak: KeycloakService, ngZone: NgZone) =>
     DashboardModule,
     HttpClientModule,
     MoviesModule,
-    WidgetsModule
+    WidgetsModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     {

@@ -1,3 +1,26 @@
-<div class="w-full h-full flex justify-center">
-  <app-videos-list></app-videos-list>
+<div class="w-full h-full flex flex-col items-center px-10 py-5">
+  <!-- Filter -->
+  <div class="w-full flex justify-between" [formGroup]="searchForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <input formControlName="title" matInput placeholder="Search for a movie">
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Emotion</mat-label>
+      <mat-select formControlName="emotion">
+        <mat-option *ngFor="let emotion of allEmotions" [value]="emotion">
+          {{emotion}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <!-- List -->
+  <app-videos-list [title]="searchForm.value.title" [emotion]="searchForm.value.emotion" [pageSize]="pageSize"
+    [skip]="skip" (count)="count = $event"></app-videos-list>
+  <!-- Page -->
+  <div *ngIf="count" class="w-full flex justify-center p-5">
+    <button mat-button [class]="isCurrentPage(i) ? 'bg-slate-100' : ''"
+      *ngFor="let c of [].constructor(nbPage(count)); let i = index" (click)="setSkip(i*pageSize)">{{ i+1 }}</button>
+  </div>
 </div>

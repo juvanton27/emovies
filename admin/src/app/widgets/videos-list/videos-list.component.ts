@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Movie } from '../../model/movie.model';
 import { SearchResult } from '../../model/search-result.model';
@@ -6,13 +6,20 @@ import { MoviesService } from '../../services/movies.service';
 import { VideoInfoComponent } from '../video-info/video-info.component';
 import { LoggerService } from '../../services/logger.service';
 import { Log } from '../../model/log.model';
+import { Emotion } from '../../model/emotion.type';
 
 @Component({
   selector: 'app-videos-list',
   templateUrl: './videos-list.component.html',
   styleUrls: ['./videos-list.component.scss']
 })
-export class VideosListComponent implements OnInit {
+export class VideosListComponent implements OnInit, OnChanges {
+  @Input() title?: string;
+  @Input() emotion?: Emotion | 'all';
+  @Input() skip?: number;
+  @Input() pageSize?: number;
+  @Output() count!: EventEmitter<number>;
+
   movies: Movie[] = [];
   
   constructor(
@@ -20,10 +27,19 @@ export class VideosListComponent implements OnInit {
     private readonly moviesService: MoviesService,
     public dialog: MatDialog,
     private readonly loggerService: LoggerService
-  ) { }
+  ) {
+    this.count = new EventEmitter<number>();
+  }
+
+  ngOnChanges(): void {
+    let filter: any = {
+      title: this.title,
+      emotion: this.emotion === 'all' ? undefined : this.emotion
+    };
+    this.refreshMovies(this.pageSize, this.skip, filter);
+  }
 
   ngOnInit(): void {
-    this.refreshMovies();
     this.loggerService.onCurrentLogs.subscribe((logs: Log) => logs?.refresh ? this.refreshMovies() : '');
   }
 
@@ -34,11 +50,16 @@ export class VideosListComponent implements OnInit {
   openMovieInfo(id: number): void {
     this.dialog.open(VideoInfoComponent, {
       data: id,
-      maxHeight: '80%'
+      height: '80%',
+      maxWidth: '1000px',
+      width: '80%'
     });
   }
 
-  refreshMovies(): void {
-    this.moviesService.getAll(50, 0, {uploaded: true}).subscribe((movies: SearchResult<Movie>) => this.movies = movies.result);
+  refreshMovies(pageSize: number = 50, skip: number = 0, filter: any = {}): void {
+    this.moviesService.getAll(pageSize, skip, filter).subscribe((movies: SearchResult<Movie>) => {
+      this.movies = movies.result;
+      this.count.emit(movies.totalCount);
+    });
   }
 }

@@ -22,9 +22,13 @@ export class MoviesController {
     @Query('pageSize') pageSize: string, 
     @Query('skip') skip: string,
     @Query('uploaded') uploaded: string,
+    @Query('title') title: string,
+    @Query('emotion') emotion: string,
   ): Observable<SearchResult<Movie>> {
     let filter: any = {};
     if (uploaded) filter['uploaded'] = uploaded === 'true';
+    if (title) filter['title'] = title;
+    if (emotion) filter['emotion'] = emotion;
     return this.moviesService.getAll(+pageSize, +skip, filter);
   }
 

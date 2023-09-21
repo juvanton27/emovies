@@ -19,7 +19,9 @@ export class MoviesService {
     let params = new HttpParams();
     params = params.append('pageSize', pageSize);
     params = params.append('skip', skip);
-    if (filter?.uploaded) params.append('uploaded', filter.uploaded);
+    if (filter?.uploaded) params = params.append('uploaded', filter.uploaded);
+    if (filter?.title) params = params.append('title', filter.title);
+    if (filter?.emotion) params = params.append('emotion', filter.emotion);
     return this.http.get<SearchResult<Movie>>(url, { params });
   }
 

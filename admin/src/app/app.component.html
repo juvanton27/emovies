@@ -6,9 +6,13 @@
       </button>
       <span>eMovies</span>
     </div>
-    <button mat-icon-button class="flex items-center" (click)="generateVideo()">
+    <button *ngIf="(!logs?.id || logs?.stop) && logs" mat-icon-button class="flex items-center" (click)="generateVideo()">
       <mat-icon>upload</mat-icon>
     </button>
+    <div *ngIf="(logs?.id && !logs?.stop) || !logs" class="flex items-center gap-2">
+      <span class="text-sm">Server busy</span>
+      <mat-spinner [diameter]="20"></mat-spinner>
+    </div>
   </mat-toolbar>
   <mat-drawer-container class="h-[calc(100%-64px)]">
     <mat-drawer #drawer [mode]="showSidenav ? 'side' : 'push'" [opened]="showSidenav" class="p-[16px] w-[300px]">
@@ -19,10 +23,6 @@
             <mat-icon>{{ route.icon }}</mat-icon>
             <h1>{{ route.title }}</h1>
           </a>
-        </div>
-        <div *ngIf="!logs" class="flex w-full justify-evenly rounded-lg bg-slate-50 py-2 px-4">
-          <mat-spinner diameter="25" class="text-black"></mat-spinner>
-          <p>Server busy, connecting ...</p>
         </div>
         <app-processing-state *ngIf="logs?.id && !logs?.stop" [logs]="logs"></app-processing-state>
       </div>
