@@ -1,26 +1,25 @@
-<mat-tab-group class="h-full">
-  <mat-tab label="Info">
-    <div class="grid grid-cols-2 justify-items-center items-center h-full p-4 gap-4">
-      <img *ngIf="movie" [src]="fullPosterPath(movie.posterPath)" [alt]="movie.title" class="h-max w-max max-h-[70vh] rounded-lg">
-      <div>
-        <h1>{{ movie?.title }}</h1>
-        <p>{{ movie?.overview }}</p>
+<div *ngIf="movie" class="flex flex-col md:flex-row h-full">
+  <video controls class="max-w-[475px]">
+    <source [src]="resultContent" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <mat-tab-group class="w-full h-full max-w-[475px]">
+    <mat-tab label="Info">
+      <div class="h-full flex flex-col p-10 justify-evenly items-center">
+        <h1 class="text-7xl">{{ movie.title | uppercase }}</h1>
+        <div>
+          <span class="text-sm text-slate-500">Overview</span>
+          <p class="bg-slate-50 rounded-lg p-4">{{ movie.overview }}</p>
+        </div>
       </div>
-    </div>
-  </mat-tab>
-  <mat-tab label="Result">
-    <div class="h-full flex justify-center items-center">
-      <video width="320" height="240" controls>
-        <source [src]="resultContent" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    </div>
-  </mat-tab>
-  <mat-tab label="Logs">
-    <div class="h-full flex justify-center items-center">
-      <div #terminal class="max-h-[70vh] overflow-scroll m-10 p-4 rounded-lg bg-slate-50 font-['Courier_New'] text-sm">
-        <p *ngFor="let log of logContent">{{ log }}</p>
+    </mat-tab>
+    <mat-tab label="Logs">
+      <div class="h-full flex justify-center items-center">
+        <div #terminal
+          class="max-h-[70vh] overflow-y-scroll p-4 m-4 rounded-lg bg-slate-50 font-['Courier_New'] text-sm">
+          <p *ngFor="let log of logContent">{{ log }}</p>
+        </div>
       </div>
-    </div>
-  </mat-tab>
-</mat-tab-group>
+    </mat-tab>
+  </mat-tab-group>
+</div>

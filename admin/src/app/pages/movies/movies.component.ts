@@ -13,7 +13,7 @@ export class MoviesComponent {
     title: new FormControl(),
     emotion: new FormControl('all' as any),
   });
-  allEmotions = ['all', ...allEmotions];
+  allEmotions = ['all', ...allEmotions.sort()];
   
   // Page
   pageSize: number = 12;

@@ -1,9 +1,12 @@
 <div class="max-w-[1200px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-  <div *ngFor="let movie of movies" class="hover:cursor-pointer bg-slate-100 rounded-lg" (click)="openMovieInfo(movie.id)">
-    <img [src]="fullPosterPath(movie.posterPath)" [alt]="movie.title" class="bg-cover aspect-[2/3] rounded-lg">
-    <div class="flex justify-center items-center">
-      <mat-icon *ngIf="!movie.uploaded" color="warn" class="scale-[0.7]">error_outline</mat-icon>
-      <h1>{{ movie.title }}</h1>
+  <div *ngFor="let movie of movies" class="hover:cursor-pointer" (click)="openMovieInfo(movie.id)">
+    <img [src]="fullPosterPath(movie.posterPath)" [alt]="movie.title" class="bg-cover aspect-[2/3] rounded-xl hover:drop-shadow-md">
+    <div class="my-2 flex justify-between items-center">
+      <div>
+        <p>{{ movie.title }}</p>
+        <p class="text-sm text-slate-500">{{ movie.emotion }}</p>
+      </div>
+      <mat-icon *ngIf="!movie.uploaded" color="warn" class="scale-[0.7]" matTooltip="Error while creating video">error_outline</mat-icon>
     </div>
   </div>
 </div>

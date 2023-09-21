@@ -50,6 +50,7 @@ export class VideosListComponent implements OnInit, OnChanges {
   openMovieInfo(id: number): void {
     this.dialog.open(VideoInfoComponent, {
       data: id,
+      maxHeight: '800px',
       height: '80%',
       maxWidth: '1000px',
       width: '80%'
