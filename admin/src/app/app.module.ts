@@ -12,6 +12,7 @@ import { MaterialModule } from './material.module';
 import { DashboardModule } from './pages/dashboard/dashboard.module';
 import { MoviesModule } from './pages/movies/movies.module';
 import { WidgetsModule } from './widgets/widgets.module';
+import { SettingsModule } from './pages/settings/settings.module';
 
 const initializer = (keycloak: KeycloakService, ngZone: NgZone) =>
   (): Promise<any> =>
@@ -47,7 +48,8 @@ const initializer = (keycloak: KeycloakService, ngZone: NgZone) =>
     MoviesModule,
     WidgetsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SettingsModule
   ],
   providers: [
     {

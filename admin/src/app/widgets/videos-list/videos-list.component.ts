@@ -52,7 +52,7 @@ export class VideosListComponent implements OnInit, OnChanges {
       data: id,
       maxHeight: '800px',
       height: '80%',
-      maxWidth: '1000px',
+      maxWidth: '1200px',
       width: '80%'
     });
   }

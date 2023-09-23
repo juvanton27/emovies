@@ -15,45 +15,6 @@
 }
 
 
-/********************************************
-* ANGULAR MATERIAL COMPONENTS CUSTOMISATION *
-********************************************/
-
-// Dialog
-.mat-mdc-dialog-surface.mdc-dialog__surface {
-  border-radius: 30px !important;
-}
-
-// Form field
-.mdc-notched-outline__leading {
-  width: 30px !important;
-  border-top-left-radius: 30px !important;
-  border-bottom-left-radius: 30px !important;
-  border-width: 0 !important;
-  @apply bg-slate-700;
-}
-.mdc-notched-outline__notch {
-  border-width: 0 !important;
-  @apply bg-slate-700;
-}
-.mdc-notched-outline.mdc-notched-outline--upgraded.ng-star-inserted.mdc-notched-outline--notched {
-  z-index: 0 !important;
-}
-.mdc-notched-outline__trailing {
-  border-top-right-radius: 30px !important;
-  border-bottom-right-radius: 30px !important;
-  border-width: 0 !important;
-  @apply bg-slate-700;
-}
-.ng-trigger.ng-trigger-transformPanel.ng-tns-c3393473648-3.mat-mdc-select-panel.mdc-menu-surface.mdc-menu-surface--open.mat-primary.ng-star-inserted {
-  border-radius: 30px !important;
-  padding: 10px !important
-}
-.mat-mdc-option.mdc-list-item.ng-tns-c3393473648-3.ng-star-inserted {
-  border-radius: 30px !important;
-  margin-block: 4px !important;
-}
-
 /*********************************************
 * ANGULAR MATERIAL THEME COLOR CUSTOMIZATION *
 *********************************************/
@@ -61,24 +22,14 @@
 @import '@angular/material/theming';
 @include mat-core();
 
-/**
- * Each Angular Material theme needs a primary, accent, warn, 
- * foreground and background variable
- * Primary, accent and warn variables are colors
- * Background and foreground variables are palettes and have distinct colors 
- * for each Angular Material components (like status-bar, app-bar, etc.)
- * Once themes variables are created, they must be included in a CSS class 
- * like .light or .dark 
- */
-
 // NORMAL THEME
 $normal-theme-background-palette: (
   status-bar: map.get($mat-grey-palette, 300),
-  app-bar:    map.get($mat-grey-palette, 100),
+  app-bar: theme('colors.slate.50'),
   background: map.get($mat-grey-palette, 50),
-  hover:      rgba(black, 0.04),
-  card:       white,
-  dialog:     white,
+  hover: rgba(black, 0.04),
+  card: white,
+  dialog: white,
   disabled-button: rgba(black, 0.12),
   raised-button: white,
   focused-button: $dark-focused,
@@ -91,26 +42,25 @@ $normal-theme-background-palette: (
 );
 
 $normal-theme-foreground-palette: (
-  base:              black,
-  divider:           $dark-dividers,
-  dividers:          $dark-dividers,
-  disabled:          $dark-disabled-text,
-  disabled-button:   rgba(black, 0.26),
-  disabled-text:     $dark-disabled-text,
-  elevation:         black,
-  hint-text:         $dark-disabled-text,
-  secondary-text:    $dark-secondary-text,
-  icon:              rgba(black, 0.54),
-  icons:             rgba(black, 0.54),
-  text:              rgba(black, 0.87),
-  slider-min:        rgba(black, 0.87),
-  slider-off:        rgba(black, 0.26),
+  base: black,
+  divider: $dark-dividers,
+  dividers: $dark-dividers,
+  disabled: $dark-disabled-text,
+  disabled-button: rgba(black, 0.26),
+  disabled-text: $dark-disabled-text,
+  elevation: black,
+  hint-text: $dark-disabled-text,
+  secondary-text: $dark-secondary-text,
+  icon: rgba(black, 0.54),
+  icons: rgba(black, 0.54),
+  text: rgba(black, 0.87),
+  slider-min: rgba(black, 0.87),
+  slider-off: rgba(black, 0.26),
   slider-off-active: rgba(black, 0.38),
 );
 
 $normal-theme: (
-  color: (
-    primary: mat-palette($mat-indigo),
+  color: (primary: mat-palette($mat-indigo),
     accent: mat-palette($mat-pink, A200, A100, A400),
     warn: mat-palette($mat-red),
     is-dark: false,
@@ -123,11 +73,11 @@ $normal-theme: (
 // DARK THEME
 $dark-theme-background-palette: (
   status-bar: black,
-  app-bar:    map.get($mat-grey-palette, 900),
+  app-bar: map.get($mat-grey-palette, 900),
   background: #303030,
-  hover:      rgba(white, 0.04),
-  card:       map.get($mat-grey-palette, 800),
-  dialog:     map.get($mat-grey-palette, 800),
+  hover: rgba(white, 0.04),
+  card: map.get($mat-grey-palette, 800),
+  dialog: map.get($mat-grey-palette, 800),
   disabled-button: rgba(white, 0.12),
   raised-button: map.get($mat-grey-palette, 800),
   focused-button: $light-focused,
@@ -140,26 +90,25 @@ $dark-theme-background-palette: (
 );
 
 $dark-theme-foreground-palette: (
-  base:              white,
-  divider:           $light-dividers,
-  dividers:          $light-dividers,
-  disabled:          $light-disabled-text,
-  disabled-button:   rgba(white, 0.3),
-  disabled-text:     $light-disabled-text,
-  elevation:         black,
-  hint-text:         $light-disabled-text,
-  secondary-text:    $light-secondary-text,
-  icon:              white,
-  icons:             white,
-  text:              white,
-  slider-min:        white,
-  slider-off:        rgba(white, 0.3),
+  base: white,
+  divider: $light-dividers,
+  dividers: $light-dividers,
+  disabled: $light-disabled-text,
+  disabled-button: rgba(white, 0.3),
+  disabled-text: $light-disabled-text,
+  elevation: black,
+  hint-text: $light-disabled-text,
+  secondary-text: $light-secondary-text,
+  icon: white,
+  icons: white,
+  text: white,
+  slider-min: white,
+  slider-off: rgba(white, 0.3),
   slider-off-active: rgba(white, 0.3),
 );
 
 $dark-theme: (
-  color: (
-    primary: mat-palette($mat-cyan),
+  color: (primary: mat-palette($mat-cyan),
     accent: mat-palette($mat-blue-gray, A200, A100, A400),
     warn: mat-palette($mat-amber),
     is-dark: true,
@@ -170,4 +119,141 @@ $dark-theme: (
 
 .dark {
   @include angular-material-theme($dark-theme);
+}
+
+/********************************************
+* ANGULAR MATERIAL COMPONENTS CUSTOMISATION *
+********************************************/
+// Toolbar
+// .mat-toolbar.flex.justify-between.mat-toolbar-single-row {
+//   @apply bg-slate-50;
+// }
+// .dark .mat-toolbar.flex.justify-between.mat-toolbar-single-row {
+//   @apply bg-slate-700;
+// }
+
+// Drawer
+.mat-drawer.ng-tns-c2384444419-0.ng-trigger.ng-trigger-transform.mat-drawer-side.mat-drawer-opened.ng-star-inserted {
+  width: 300px !important;
+  padding: 16px !important;
+  margin: 16px 0 16px 16px !important;
+  border-radius: 30px !important;
+  border-width: 0 !important;
+  @apply bg-slate-50
+}
+
+.dark .mat-drawer.ng-tns-c2384444419-0.ng-trigger.ng-trigger-transform.mat-drawer-side.mat-drawer-opened.ng-star-inserted {
+  background-color: map-get($dark-theme-background-palette, card) !important;
+}
+
+.mat-drawer-container {
+  background-color: white !important;
+}
+
+.dark .mat-drawer-container {
+  background-color: map-get($dark-theme-background-palette, background) !important;
+}
+
+// Dialog
+.mat-mdc-dialog-surface.mdc-dialog__surface {
+  border-radius: 30px !important;
+}
+
+// Form field
+.mdc-notched-outline__leading {
+  width: 30px !important;
+  border-top-left-radius: 30px !important;
+  border-bottom-left-radius: 30px !important;
+  border-width: 0 !important;
+  @apply bg-slate-100;
+}
+
+.dark .mdc-notched-outline__leading {
+  width: 30px !important;
+  border-top-left-radius: 30px !important;
+  border-bottom-left-radius: 30px !important;
+  border-width: 0 !important;
+  @apply bg-slate-700;
+}
+
+.mdc-notched-outline__notch {
+  border-width: 0 !important;
+  @apply bg-slate-100;
+}
+
+.dark .mdc-notched-outline__notch {
+  border-width: 0 !important;
+  @apply bg-slate-700;
+}
+
+.mdc-notched-outline.mdc-notched-outline--upgraded.ng-star-inserted.mdc-notched-outline--notched {
+  z-index: 0 !important;
+}
+
+.mdc-notched-outline__trailing {
+  border-top-right-radius: 30px !important;
+  border-bottom-right-radius: 30px !important;
+  border-width: 0 !important;
+  @apply bg-slate-100;
+}
+
+.dark .mdc-notched-outline__trailing {
+  border-top-right-radius: 30px !important;
+  border-bottom-right-radius: 30px !important;
+  border-width: 0 !important;
+  @apply bg-slate-700;
+}
+
+.ng-trigger.ng-trigger-transformPanel.ng-tns-c3393473648-3.mat-mdc-select-panel.mdc-menu-surface.mdc-menu-surface--open.mat-primary.ng-star-inserted {
+  border-radius: 30px !important;
+  padding: 10px !important
+}
+
+.mat-mdc-option.mdc-list-item.ng-tns-c3393473648-3.ng-star-inserted {
+  border-radius: 30px !important;
+  margin-block: 4px !important;
+}
+
+// Button
+.mdc-button.mat-mdc-button.button-active.mat-unthemed.mat-mdc-button-base.ng-star-inserted {
+  @apply bg-slate-100
+}
+
+.button-active {
+  @apply bg-slate-100
+}
+
+.dark .mdc-button.mat-mdc-button.button-active.mat-unthemed.mat-mdc-button-base.ng-star-inserted {
+  @apply bg-slate-700
+}
+
+.dark .button-active {
+  @apply bg-slate-700
+}
+
+// Card
+.mat-mdc-card.mdc-card {
+  border-radius: 30px !important;
+  padding: 16px !important;
+  box-shadow: none !important;
+}
+
+// Tabs
+.mdc-tab-indicator__content.mdc-tab-indicator__content--underline {
+  height: 50px !important;
+  margin-inline: 3px !important;
+  border-radius: 30px !important;
+  border: none !important;
+  @apply bg-slate-100;
+}
+
+.mdc-tab.mat-mdc-tab.mat-mdc-focus-indicator.ng-star-inserted:hover {
+  border-radius: 30px !important;
+  @apply bg-slate-50;
+}
+
+.mat-mdc-tab-group,
+.mat-mdc-tab-nav-bar {
+  --mat-tab-header-active-ripple-color: transparent !important;
+  --mat-tab-header-inactive-ripple-color: transparent !important;
 }

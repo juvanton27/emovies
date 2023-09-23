@@ -1,13 +1,13 @@
-<div class="h-screen dark">
+<div #theme class="h-screen dark">
   <mat-toolbar class="flex justify-between">
-    <div class="flex gap-2">
+    <div class="flex items-center">
        <button *ngIf="!showSidenav" mat-icon-button class="flex items-center" (click)="drawer.toggle()">
-        <mat-icon>menu</mat-icon>
+        <span class="material-symbols-outlined">menu</span>
       </button>
       <span>eMovies</span>
     </div>
     <button *ngIf="(!logs?.id || logs?.stop) && logs" mat-icon-button class="flex items-center" (click)="generateVideo()">
-      <mat-icon>upload</mat-icon>
+      <span class="material-symbols-outlined">library_add</span>
     </button>
     <div *ngIf="(logs?.id && !logs?.stop) || !logs" class="flex items-center gap-2">
       <span class="text-sm">Server busy</span>
@@ -15,20 +15,28 @@
     </div>
   </mat-toolbar>
   <mat-drawer-container class="h-[calc(100%-64px)]">
-    <mat-drawer #drawer [mode]="showSidenav ? 'side' : 'push'" [opened]="showSidenav" class="p-[16px] w-[300px]">
+    <mat-drawer #drawer [mode]="showSidenav ? 'side' : 'push'" [opened]="showSidenav">
       <div class="flex flex-col gap-2 justify-between h-full">
         <div>
           <a *ngFor="let route of routes" [routerLink]="route.link" class="mat-drawer-button"
-            routerLinkActive="mat-drawer-button-active" (click)="!showSidenav ? drawer.toggle() : ''">
-            <mat-icon>{{ route.icon }}</mat-icon>
+            routerLinkActive="button-active" (click)="!showSidenav ? drawer.toggle() : ''">
+            <span class="material-symbols-outlined">{{ route.icon }}</span>
             <h1>{{ route.title }}</h1>
           </a>
         </div>
-        <app-processing-state *ngIf="logs?.id && !logs?.stop" [logs]="logs"></app-processing-state>
+        <div>
+          <app-processing-state *ngIf="logs?.id && !logs?.stop" [logs]="logs"></app-processing-state>
+          <a class="mat-drawer-button" routerLink="settings" routerLinkActive="button-active"  (click)="!showSidenav ? drawer.toggle() : ''">
+            <span class="material-symbols-outlined">tune</span>
+            <h1>Settings</h1>
+          </a>
+        </div>
       </div>
     </mat-drawer>
     <mat-drawer-content>
-      <router-outlet></router-outlet>
+      <div class="m-[16px] md:ml-[32px]">
+        <router-outlet></router-outlet>
+      </div>
     </mat-drawer-content>
   </mat-drawer-container>
 </div>

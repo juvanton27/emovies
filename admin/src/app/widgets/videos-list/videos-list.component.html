@@ -6,7 +6,7 @@
         <p>{{ movie.title }}</p>
         <p class="text-sm text-slate-500">{{ movie.emotion }}</p>
       </div>
-      <mat-icon *ngIf="!movie.uploaded" color="warn" class="scale-[0.7]" matTooltip="Error while creating video">error_outline</mat-icon>
+      <span *ngIf="!movie.uploaded" class="material-symbols-outlined text-red-500" matTooltip="Error while creating video">error</span>
     </div>
   </div>
 </div>

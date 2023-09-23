@@ -7,6 +7,7 @@ module.exports = {
     extend: {},
   },
   plugins: [],
-  important: true
+  important: true,
+  'postcss-import': {},
 }
 
