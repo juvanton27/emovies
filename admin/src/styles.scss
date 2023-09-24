@@ -25,10 +25,10 @@
 // NORMAL THEME
 $normal-theme-background-palette: (
   status-bar: map.get($mat-grey-palette, 300),
-  app-bar: theme('colors.slate.50'),
+  app-bar: #f8fafc,
   background: map.get($mat-grey-palette, 50),
   hover: rgba(black, 0.04),
-  card: white,
+  card: #f8fafc,
   dialog: white,
   disabled-button: rgba(black, 0.12),
   raised-button: white,
@@ -169,10 +169,6 @@ $dark-theme: (
 }
 
 .dark .mdc-notched-outline__leading {
-  width: 30px !important;
-  border-top-left-radius: 30px !important;
-  border-bottom-left-radius: 30px !important;
-  border-width: 0 !important;
   @apply bg-slate-700;
 }
 
@@ -182,7 +178,6 @@ $dark-theme: (
 }
 
 .dark .mdc-notched-outline__notch {
-  border-width: 0 !important;
   @apply bg-slate-700;
 }
 
@@ -198,18 +193,18 @@ $dark-theme: (
 }
 
 .dark .mdc-notched-outline__trailing {
-  border-top-right-radius: 30px !important;
-  border-bottom-right-radius: 30px !important;
-  border-width: 0 !important;
   @apply bg-slate-700;
 }
 
-.ng-trigger.ng-trigger-transformPanel.ng-tns-c3393473648-3.mat-mdc-select-panel.mdc-menu-surface.mdc-menu-surface--open.mat-primary.ng-star-inserted {
+.ng-trigger.ng-trigger-transformPanel.ng-tns-c3393473648-3.mat-mdc-select-panel.mdc-menu-surface.mdc-menu-surface--open.mat-primary.ng-star-inserted,
+div.mat-mdc-select-panel {
   border-radius: 30px !important;
   padding: 10px !important
 }
 
-.mat-mdc-option.mdc-list-item.ng-tns-c3393473648-3.ng-star-inserted {
+.mat-mdc-option.mdc-list-item.ng-tns-c3393473648-3.ng-star-inserted,
+.mat-mdc-option.mdc-list-item.ng-tns-c3393473648-6.ng-star-inserted,
+.mat-mdc-option.mdc-list-item.ng-tns-c3393473648-9.ng-star-inserted{
   border-radius: 30px !important;
   margin-block: 4px !important;
 }

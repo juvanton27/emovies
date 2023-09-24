@@ -1,11 +1,10 @@
 <div #theme class="h-screen dark">
   <mat-toolbar class="flex justify-between">
-    <div class="flex items-center">
-       <button *ngIf="!showSidenav" mat-icon-button class="flex items-center" (click)="drawer.toggle()">
-        <span class="material-symbols-outlined">menu</span>
-      </button>
-      <span>eMovies</span>
-    </div>
+    <button *ngIf="!showSidenav" mat-icon-button class="flex items-center" (click)="drawer.toggle()">
+     <span class="material-symbols-outlined">menu</span>
+   </button>
+   <div *ngIf="showSidenav"></div>
+    <span class="font-['Futura']">YourAIPartner</span>
     <button *ngIf="(!logs?.id || logs?.stop) && logs" mat-icon-button class="flex items-center" (click)="generateVideo()">
       <span class="material-symbols-outlined">library_add</span>
     </button>
