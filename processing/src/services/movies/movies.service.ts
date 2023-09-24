@@ -56,6 +56,13 @@ export class MoviesService {
     );
   }
 
+  findTMDBMovie(id: number): Observable<MovieTMDBDbo> {
+    const url = `${this.tmdbUrl}/${id}`;
+    return this.axios.get(url, {headers: this.headers}).pipe(
+      map(({data}: {data: MovieTMDBDbo}) => data),
+    );
+  }
+
   downloadPoster(movie: Movie): Observable<string> {
     const posterExt = path.extname(movie.posterPath);
     const filepath = `${this.dataDir}/image/${movie.id}${posterExt}`;

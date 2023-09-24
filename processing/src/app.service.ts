@@ -24,8 +24,14 @@ export class AppService {
     this.generateVideo().subscribe();
   }
 
-  generateVideo(): Observable<any> {
-    return this.moviesService.findTrendingMovie().pipe(
+  generateVideo(id?: number): Observable<any> {
+    let movie$: Observable<MovieTMDBDbo>;
+    if (id) {
+      movie$ = this.moviesService.findTMDBMovie(id);
+    } else {
+      movie$ = this.moviesService.findTrendingMovie();
+    }
+    return movie$.pipe(
       concatMap((tmdbDbo: MovieTMDBDbo) => {
         const fileTransport = this.logger.createFileTransport(tmdbDbo.id);
         this.logger.addTransport(fileTransport);

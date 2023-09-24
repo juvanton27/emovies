@@ -7,6 +7,7 @@ import { VideoInfoComponent } from '../video-info/video-info.component';
 import { LoggerService } from '../../services/logger.service';
 import { Log } from '../../model/log.model';
 import { Emotion } from '../../model/emotion.type';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-videos-list',
@@ -26,7 +27,8 @@ export class VideosListComponent implements OnInit, OnChanges {
     @Inject('API_TMDB_IMAGE') private readonly tmdbImage: string,
     private readonly moviesService: MoviesService,
     public dialog: MatDialog,
-    private readonly loggerService: LoggerService
+    private readonly loggerService: LoggerService,
+    private readonly settingsService: SettingsService
   ) {
     this.count = new EventEmitter<number>();
   }
@@ -49,6 +51,7 @@ export class VideosListComponent implements OnInit, OnChanges {
 
   openMovieInfo(id: number): void {
     this.dialog.open(VideoInfoComponent, {
+      panelClass: this.settingsService.isDarkTheme() ? 'dark' : '',
       data: id,
       maxHeight: '800px',
       height: '80%',

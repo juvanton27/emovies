@@ -20,6 +20,7 @@ export class VideoInfoComponent implements OnInit, OnDestroy {
 
   // Results
   resultContent: string = '';
+  error = false;
 
   constructor(
     @Inject('API_TMDB_IMAGE') private readonly tmdbImage: string,
@@ -49,5 +50,9 @@ export class VideoInfoComponent implements OnInit, OnDestroy {
 
   fullPosterPath(path: string): string {
     return this.tmdbImage+path;
+  }
+
+  handleError(e: any): void {
+    console.log(e)
   }
 }

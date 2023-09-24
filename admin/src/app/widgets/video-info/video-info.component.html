@@ -1,16 +1,35 @@
 <div *ngIf="movie" class="flex flex-col md:flex-row h-full">
-  <video controls class="max-w-[475px]">
-    <source [src]="resultContent" type="video/mp4">
+  <video *ngIf="!error" controls class="w-full w-fit md:max-w-[475px]">
+    <source [src]="resultContent" type="video/mp4" (error)="error = true">
     Your browser does not support the video tag.
   </video>
+  <div *ngIf="error">
+    <img [src]="fullPosterPath(movie.posterPath)" [alt]="movie.title" class="w-full w-fit md:max-w-[475px] h-full" />
+  </div>
   <div class="p-4">
     <mat-tab-group class="w-full h-full">
       <mat-tab label="Info">
         <div class="h-full flex flex-col p-10 justify-evenly">
           <h1 class="text-7xl">{{ movie.title | uppercase }}</h1>
-          <div>
-            <span class="text-sm text-slate-500">Overview</span>
-            <p class="bg-slate-50 rounded-lg p-4">{{ movie.overview }}</p>
+          <div class="flex flex-col gap-2">
+            <div>
+              <span class="text-sm text-slate-500">Overview</span>
+              <mat-card>{{ movie.overview }}</mat-card>
+            </div>
+            <div *ngIf="error">
+              <span class="text-sm text-slate-500">More</span>
+              <mat-card>
+                <div class="flex justify-between items-center">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-red-500">error</span>
+                    <p>No video yet</p>
+                  </div>
+                  <button mat-icon-button matTooltip="Try again">
+                    <span class="material-symbols-outlined">library_add</span>
+                  </button>
+                </div>
+              </mat-card>
+            </div>
           </div>
         </div>
       </mat-tab>

@@ -5,6 +5,7 @@ import { MoviesService } from '../../services/movies/movies.service';
 import { SearchResult } from '../../model/search-result.model';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
+import { MovieTMDBDbo } from '../../dbo/movie.tmdb.dbo';
 
 @Controller('api/movies')
 export class MoviesController {
@@ -30,6 +31,15 @@ export class MoviesController {
     if (title) filter['title'] = title;
     if (emotion) filter['emotion'] = emotion;
     return this.moviesService.getAll(+pageSize, +skip, filter);
+  }
+
+  @Get('tmdb')
+  getAllFromTMDB(
+    @Query('title') title: string,
+  ): Observable<MovieTMDBDbo[]> {
+    let filter: any = {};
+    if (title) filter['title'] = title;
+    return this.moviesService.getAllFromTMDB(filter);
   }
 
   @Get(':id')

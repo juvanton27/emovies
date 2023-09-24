@@ -9,6 +9,7 @@ import { MovieDbo } from './dbo/movie.dbo';
 import { MoviesService } from './services/movies/movies.service';
 import { MoviesController } from './controllers/movies/movies.controller';
 import { LoggerController } from './controllers/logger/logger.controller';
+import { HttpModule } from '@nestjs/axios';
 
 const detectEnvFile = (): string => {
   if (!process.env.ENV) {
@@ -45,6 +46,7 @@ const detectEnvFile = (): string => {
       })
     }),
     TypeOrmModule.forFeature([MovieDbo]),
+    HttpModule
   ],
   controllers: [AppController, MoviesController, LoggerController],
   providers: [

@@ -25,6 +25,13 @@ export class MoviesService {
     return this.http.get<SearchResult<Movie>>(url, { params });
   }
 
+  getAllFromTMDB(filter: any): Observable<any[]> {
+    const url = `${this.endpoint}/movies/tmdb`;
+    let params = new HttpParams();
+    if (filter?.title) params = params.append('title', filter.title);
+    return this.http.get<any[]>(url, { params });
+  }
+
   getById(id: number): Observable<Movie> {
     const url = `${this.endpoint}/movies/${id}`;
     return this.http.get<Movie>(url);
@@ -35,8 +42,10 @@ export class MoviesService {
     return this.http.get(url, { responseType: 'text' });
   }
 
-  generateVideo(): Observable<void> {
+  generateVideo(id?: number): Observable<void> {
     const url = '/api-processing';
-    return this.http.get<void>(url);
+    let params = new HttpParams();
+    if (id) params = params.append('id', id);
+    return this.http.get<void>(url, {params});
   }
 }

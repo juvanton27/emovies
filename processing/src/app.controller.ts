@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, MessageEvent, Sse } from '@nestjs/common';
+import { Controller, Get, Inject, MessageEvent, Query, Sse } from '@nestjs/common';
 import { Observable, interval, map, of, tap } from 'rxjs';
 import { AppService } from './app.service';
 import { LoggerService } from './services/logger/logger.service';
@@ -11,7 +11,10 @@ export class AppController {
   ) { }
 
   @Get()
-  generateVideo(): Observable<any> {
+  generateVideo(
+    @Query('id') id: string,
+  ): Observable<any> {
+    if (id && !isNaN(+id)) return this.appService.generateVideo(+id);
     return this.appService.generateVideo();
   }
 

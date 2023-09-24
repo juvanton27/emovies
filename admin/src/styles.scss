@@ -197,14 +197,13 @@ $dark-theme: (
 }
 
 .ng-trigger.ng-trigger-transformPanel.ng-tns-c3393473648-3.mat-mdc-select-panel.mdc-menu-surface.mdc-menu-surface--open.mat-primary.ng-star-inserted,
-div.mat-mdc-select-panel {
+div.mat-mdc-select-panel,
+.mat-mdc-autocomplete-panel.mdc-menu-surface.mdc-menu-surface--open.ng-trigger.ng-trigger-panelAnimation.ng-star-inserted.mat-mdc-autocomplete-visible.mat-primary {
   border-radius: 30px !important;
   padding: 10px !important
 }
 
-.mat-mdc-option.mdc-list-item.ng-tns-c3393473648-3.ng-star-inserted,
-.mat-mdc-option.mdc-list-item.ng-tns-c3393473648-6.ng-star-inserted,
-.mat-mdc-option.mdc-list-item.ng-tns-c3393473648-9.ng-star-inserted{
+.mat-mdc-option.mdc-list-item.ng-star-inserted {
   border-radius: 30px !important;
   margin-block: 4px !important;
 }
@@ -251,4 +250,9 @@ div.mat-mdc-select-panel {
 .mat-mdc-tab-nav-bar {
   --mat-tab-header-active-ripple-color: transparent !important;
   --mat-tab-header-inactive-ripple-color: transparent !important;
+}
+
+// Autocomplete
+span.mdc-list-item__primary-text {
+  width: 100% !important;
 }

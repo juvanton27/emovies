@@ -30,7 +30,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.onResize({target: {innerWidth: window.innerWidth}})
+    this.onResize({target: {innerWidth: window.innerWidth}});
+    this.handleLogs();
+  }
+
+  handleLogs(): void {
     this.loggerService.getLastLog().subscribe((logs: Log) => {
       if (logs && !logs.stop) {
         this.loggerService.setLogs(logs);
@@ -64,11 +68,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   handleTheme(): void {
     this.settingsService.onCurrentTheme.subscribe(
       (darkTheme: boolean) => {
-        console.log(this.theme.nativeElement);
-        
         if (darkTheme) this.theme.nativeElement.classList.add('dark');
         else this.theme.nativeElement.classList.remove('dark');
       }
-    )
+    );
   }
 }

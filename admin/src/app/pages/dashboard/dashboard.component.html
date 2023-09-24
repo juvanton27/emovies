@@ -1,1 +1,24 @@
-<p>dashboard works!</p>
+<div class="grid grid-cols-2">
+  <mat-card [formGroup]="movies">
+    <mat-card-title>The Movie DB</mat-card-title>
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <input formControlName="title" matInput placeholder="Search for a movie" [matAutocomplete]="auto">
+      <span class="material-symbols-outlined px-4" matSuffix>search</span>
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let suggestion of movieSuggestions | async" [value]="suggestion.id">
+          <div class="w-full flex justify-between items-center gap-2 m-2">
+            <img [src]="fullPosterPath(suggestion.poster_path)" class="h-[50px] rounded" [alt]="suggestion.title">
+            <div class="w-full">
+              {{suggestion.title}}
+            </div>
+            <button mat-icon-button class="flex items-center"
+              (click)="generateVideo(suggestion.id)">
+              <span class="material-symbols-outlined">library_add</span>
+            </button>
+          </div>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </mat-card>
+</div>

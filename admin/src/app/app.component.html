@@ -1,11 +1,12 @@
 <div #theme class="h-screen dark">
   <mat-toolbar class="flex justify-between">
     <button *ngIf="!showSidenav" mat-icon-button class="flex items-center" (click)="drawer.toggle()">
-     <span class="material-symbols-outlined">menu</span>
-   </button>
-   <div *ngIf="showSidenav"></div>
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <div *ngIf="showSidenav"></div>
     <span class="font-['Futura']">YourAIPartner</span>
-    <button *ngIf="(!logs?.id || logs?.stop) && logs" mat-icon-button class="flex items-center" (click)="generateVideo()">
+    <button *ngIf="(!logs?.id || logs?.stop) && logs" mat-icon-button class="flex items-center"
+      (click)="generateVideo()">
       <span class="material-symbols-outlined">library_add</span>
     </button>
     <div *ngIf="(logs?.id && !logs?.stop) || !logs" class="flex items-center gap-2">
@@ -25,7 +26,8 @@
         </div>
         <div>
           <app-processing-state *ngIf="logs?.id && !logs?.stop" [logs]="logs"></app-processing-state>
-          <a class="mat-drawer-button" routerLink="settings" routerLinkActive="button-active"  (click)="!showSidenav ? drawer.toggle() : ''">
+          <a class="mat-drawer-button" routerLink="settings" routerLinkActive="button-active"
+            (click)="!showSidenav ? drawer.toggle() : ''">
             <span class="material-symbols-outlined">tune</span>
             <h1>Settings</h1>
           </a>
@@ -34,7 +36,11 @@
     </mat-drawer>
     <mat-drawer-content>
       <div class="m-[16px] md:ml-[32px]">
-        <router-outlet></router-outlet>
+        <div class="w-full h-full flex flex-col items-center">
+          <div class="max-w-[1200px]">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
       </div>
     </mat-drawer-content>
   </mat-drawer-container>
